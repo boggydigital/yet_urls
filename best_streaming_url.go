@@ -2,7 +2,7 @@ package yt_urls
 
 import (
 	"encoding/json"
-	"github.com/boggydigital/match-node"
+	"github.com/boggydigital/match_node"
 	"golang.org/x/net/html"
 	"net/http"
 	"net/url"
