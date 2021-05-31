@@ -85,7 +85,12 @@ func BestStreamingUrl(videoId string) (*url.URL, error) {
 
 		bstFmt := bestFormatByBitrate(ipr.StreamingData.Formats)
 		if bstFmt != nil {
-			return url.Parse(bstFmt.Url)
+			if bstFmt.Url != "" {
+				return url.Parse(bstFmt.Url)
+			} else if bstFmt.SignatureCipher != "" {
+				//TODO: support signature cipher YouTube URLs
+				//https://stackoverflow.com/questions/21510857/best-approach-to-decode-youtube-cipher-signature-using-php-or-js
+			}
 		}
 	}
 

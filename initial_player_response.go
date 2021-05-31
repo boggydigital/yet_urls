@@ -3,8 +3,9 @@ package yt_urls
 //streamingFormat is a minimal set of data required to make format selection and
 //return a URL
 type streamingFormat struct {
-	Url     string `json:"url"`
-	Bitrate int    `json:"bitrate"`
+	Bitrate         int    `json:"bitrate"`
+	Url             string `json:"url"`
+	SignatureCipher string `json:"signatureCipher"`
 }
 
 //initialPlayerResponse is a minimal set of data structures required to decode and
