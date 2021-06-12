@@ -1,8 +1,7 @@
 package yt_urls
 
-//streamingFormat is a minimal set of data required to make format selection and
-//return a URL
-type streamingFormat struct {
+//StreamingFormat is a minimal set of data required to perform format selection
+type StreamingFormat struct {
 	Bitrate         int    `json:"bitrate"`
 	Url             string `json:"url"`
 	SignatureCipher string `json:"signatureCipher"`
@@ -18,6 +17,6 @@ type initialPlayerResponse struct {
 		//Formats on the other hand contain URLs to files that contain both video and audio.
 		//If you have a need for something more complex or flexible - you should consider
 		//youtube-dl or any of the alternatives available
-		Formats []streamingFormat `json:"formats"`
+		Formats []StreamingFormat `json:"formats"`
 	} `json:"streamingData"`
 }
