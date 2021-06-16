@@ -1,3 +1,5 @@
+github.com/boggydigital/gost v0.1.0 h1:2RTyMgziKeBPxui7g77qk3t/4d/vijxVBka2WqwGXRg=
+github.com/boggydigital/gost v0.1.0/go.mod h1:A/i4djAJV0niwrQm1D6DKB1yWYftdYphgmHf9r7iOz8=
 github.com/boggydigital/match_node v0.1.1 h1:ko5T4J19k9XxnBXavAPs8k3zQTm5dwT0MrBGv/rXqVo=
 github.com/boggydigital/match_node v0.1.1/go.mod h1:mXcbPjp9i6MI9wuxjfy0prMNL80DzTSwKfTOkTxDLf8=
 golang.org/x/net v0.0.0-20210525063256-abc453219eb5 h1:wjuX4b5yYQnEQHzd+CBcrcC6OVR2J1CN6mUy0oSxIPo=

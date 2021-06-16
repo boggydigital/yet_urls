@@ -3,17 +3,18 @@ package yt_urls
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/boggydigital/gost"
 	"github.com/boggydigital/match_node"
 	"golang.org/x/net/html"
 	"net/http"
 	"net/url"
-	"sort"
 	"strings"
 )
 
 const (
-	iprPfx = "var ytInitialPlayerResponse = "
-	iprSfx = ";"
+	ytInitialPlayerResponse = "var ytInitialPlayerResponse ="
+	opCuBrace               = "{"
+	clCuBrace               = "}"
 )
 
 //iprScriptTextContent is an HTML node filter for YouTube <script> text content
@@ -25,24 +26,15 @@ func iprScriptTextContent(node *html.Node) bool {
 		return false
 	}
 
-	return strings.HasPrefix(node.Data, iprPfx)
+	return strings.HasPrefix(node.Data, ytInitialPlayerResponse)
 }
 
-type streamingFormats []StreamingFormat
-
-func (sf streamingFormats) Len() int {
-	return len(sf)
+func extractJsonObject(data string) string {
+	fi, li := strings.Index(data, opCuBrace), strings.LastIndex(data, clCuBrace)
+	return data[fi : li+1]
 }
 
-func (sf streamingFormats) Less(i, j int) bool {
-	return sf[i].Bitrate < sf[j].Bitrate
-}
-
-func (sf streamingFormats) Swap(i, j int) {
-	sf[i], sf[j] = sf[j], sf[i]
-}
-
-func getBitrateSortedStreamingFormats(videoId string) (streamingFormats, error) {
+func getBitrateSortedStreamingFormats(videoId string) ([]string, error) {
 	watchUrl := WatchUrl(videoId)
 
 	resp, err := http.Get(watchUrl.String())
@@ -59,35 +51,43 @@ func getBitrateSortedStreamingFormats(videoId string) (streamingFormats, error) 
 
 	if iprNode := match_node.Match(doc, iprScriptTextContent); iprNode != nil {
 
-		iprReader := strings.NewReader(
-			strings.Trim(iprNode.Data, iprPfx+iprSfx))
+		iprReader := strings.NewReader(extractJsonObject(iprNode.Data))
 
 		var ipr initialPlayerResponse
 		if err := json.NewDecoder(iprReader).Decode(&ipr); err != nil {
 			return nil, err
 		}
 
-		sfs := streamingFormats(ipr.StreamingData.Formats)
-		sort.Sort(sort.Reverse(sfs))
+		if ipr.PlayabilityStatus.Status != StatusOK {
+			return nil, fmt.Errorf(ipr.PlayabilityStatus.Status)
+		}
 
-		return sfs, nil
+		signatureCipher := false
+
+		formats := make(map[string]int, len(ipr.StreamingData.Formats))
+		for _, f := range ipr.StreamingData.Formats {
+			if f.Url == "" && f.SignatureCipher != "" {
+				signatureCipher = true
+				continue
+			}
+			formats[f.Url] = f.Bitrate
+		}
+
+		if len(formats) == 0 && signatureCipher {
+			//TODO: support signature cipher YouTube URLs
+			//https://stackoverflow.com/questions/21510857/best-approach-to-decode-youtube-cipher-signature-using-php-or-js
+			return nil, fmt.Errorf(ErrorSignatureCipher)
+		}
+
+		_, sortedFormats := gost.NewIntSortedStrSetWith(formats, true)
+
+		return sortedFormats, nil
 	}
 
 	return nil, nil
 }
 
-func streamingFormatToUrl(sf *StreamingFormat) (*url.URL, error) {
-	if sf.Url != "" {
-		return url.Parse(sf.Url)
-	} else if sf.SignatureCipher != "" {
-		//TODO: support signature cipher YouTube URLs
-		//https://stackoverflow.com/questions/21510857/best-approach-to-decode-youtube-cipher-signature-using-php-or-js
-	}
-
-	return nil, nil
-}
-
-//HighestBitrateStreamingUrl extracts the URL for "the best" streaming format for a given
+//BestStreamingUrl extracts the URL for "the best" streaming format for a given
 //YouTube video-id. Here are the key steps to make that happen:
 //1) convert video-id to a full YouTube.com/watch URL
 //2) request page content at that URL
@@ -97,7 +97,7 @@ func streamingFormatToUrl(sf *StreamingFormat) (*url.URL, error) {
 //5) select "the best" streaming format available
 //(bestFormatByBitrate contains selection criteria)
 //6) return URL for that format
-func HighestBitrateStreamingUrl(videoId string) (*url.URL, error) {
+func BestStreamingUrl(videoId string) (*url.URL, error) {
 
 	streamingFormats, err := getBitrateSortedStreamingFormats(videoId)
 
@@ -109,23 +109,23 @@ func HighestBitrateStreamingUrl(videoId string) (*url.URL, error) {
 		return nil, fmt.Errorf("yt_url: no streaming formats detected")
 	}
 
-	return streamingFormatToUrl(&streamingFormats[0])
+	return url.Parse(streamingFormats[0])
 }
 
-func BitrateSortedStreamingUrls(videoId string) ([]*url.URL, error) {
+func StreamingUrls(videoId string) ([]*url.URL, error) {
 	streamingUrls := make([]*url.URL, 0)
 
 	streamingFormats, err := getBitrateSortedStreamingFormats(videoId)
 	if err != nil {
-		return streamingUrls, nil
+		return streamingUrls, err
 	}
 
 	for _, sf := range streamingFormats {
-		url, err := streamingFormatToUrl(&sf)
+		streamingUrl, err := url.Parse(sf)
 		if err != nil {
 			return streamingUrls, err
 		}
-		streamingUrls = append(streamingUrls, url)
+		streamingUrls = append(streamingUrls, streamingUrl)
 	}
 
 	return streamingUrls, nil
