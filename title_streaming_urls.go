@@ -29,12 +29,23 @@ func iprScriptTextContent(node *html.Node) bool {
 	return strings.HasPrefix(node.Data, ytInitialPlayerResponse)
 }
 
+func titleTextContent(node *html.Node) bool {
+	if node.Type != html.TextNode ||
+		node.Parent == nil ||
+		node.Parent.Data != "title" {
+		return false
+	}
+
+	return true
+}
+
 func extractJsonObject(data string) string {
 	fi, li := strings.Index(data, opCuBrace), strings.LastIndex(data, clCuBrace)
 	return data[fi : li+1]
 }
 
-func getBitrateSortedStreamingFormats(videoId string) ([]string, error) {
+func getDocument(videoId string) (*html.Node, error) {
+
 	watchUrl := WatchUrl(videoId)
 
 	resp, err := http.Get(watchUrl.String())
@@ -44,10 +55,10 @@ func getBitrateSortedStreamingFormats(videoId string) ([]string, error) {
 
 	defer resp.Body.Close()
 
-	doc, err := html.Parse(resp.Body)
-	if err != nil {
-		return nil, err
-	}
+	return html.Parse(resp.Body)
+}
+
+func getBitrateSortedStreamingFormats(doc *html.Node) ([]string, error) {
 
 	if iprNode := match_node.Match(doc, iprScriptTextContent); iprNode != nil {
 
@@ -87,46 +98,34 @@ func getBitrateSortedStreamingFormats(videoId string) ([]string, error) {
 	return nil, nil
 }
 
-//BestStreamingUrl extracts the URL for "the best" streaming format for a given
-//YouTube video-id. Here are the key steps to make that happen:
-//1) convert video-id to a full YouTube.com/watch URL
-//2) request page content at that URL
-//3) parse response as HTML document and find required node
-//(iprScriptTextContent contains selection criteria)
-//4) decode ytInitialPlayerResponse object (to a minimal data struct)
-//5) select "the best" streaming format available
-//(bestFormatByBitrate contains selection criteria)
-//6) return URL for that format
-func BestStreamingUrl(videoId string) (*url.URL, error) {
+//TitleStreamingUrls returns page title and streaming URLs sorted by bitrate for a given videoId
+func TitleStreamingUrls(videoId string) (string, []*url.URL, error) {
 
-	streamingFormats, err := getBitrateSortedStreamingFormats(videoId)
-
+	page, err := getDocument(videoId)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
-	if len(streamingFormats) == 0 {
-		return nil, fmt.Errorf("yt_url: no streaming formats detected")
+	title := ""
+	titleText := match_node.Match(page, titleTextContent)
+	if titleText != nil {
+		title = titleText.Data
 	}
 
-	return url.Parse(streamingFormats[0])
-}
-
-func StreamingUrls(videoId string) ([]*url.URL, error) {
 	streamingUrls := make([]*url.URL, 0)
 
-	streamingFormats, err := getBitrateSortedStreamingFormats(videoId)
+	streamingFormats, err := getBitrateSortedStreamingFormats(page)
 	if err != nil {
-		return streamingUrls, err
+		return title, streamingUrls, err
 	}
 
 	for _, sf := range streamingFormats {
 		streamingUrl, err := url.Parse(sf)
 		if err != nil {
-			return streamingUrls, err
+			return title, streamingUrls, err
 		}
 		streamingUrls = append(streamingUrls, streamingUrl)
 	}
 
-	return streamingUrls, nil
+	return title, streamingUrls, nil
 }
