@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/boggydigital/match_node"
 	"golang.org/x/net/html"
-	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -17,11 +16,13 @@ const (
 )
 
 var (
-	ErrorSignatureCipher    = errors.New("signatureCipher")
-	ErrorScriptNodeNotFound = errors.New("script node with JSON data not found")
+	ErrorSignatureCipher     = errors.New("signatureCipher")
+	ErrorMissingRequiredNode = errors.New("missing required node")
 )
 
-func getScriptJsonReader(u *url.URL, matchScript func(node *html.Node) bool) (io.Reader, error) {
+func getMatchingNodes(
+	u *url.URL,
+	matches map[string]match_node.MatchDelegate) (map[string]*html.Node, error) {
 
 	resp, err := http.Get(u.String())
 	if err != nil {
@@ -35,21 +36,35 @@ func getScriptJsonReader(u *url.URL, matchScript func(node *html.Node) bool) (io
 		return nil, err
 	}
 
-	if node := match_node.Match(doc, matchScript); node != nil {
-		return strings.NewReader(extractJsonObject(node.Data)), nil
+	nodes := make(map[string]*html.Node)
+
+	for title, match := range matches {
+		if node := match_node.Match(doc, match); node != nil {
+			nodes[title] = node
+		}
 	}
 
-	return nil, ErrorScriptNodeNotFound
+	return nodes, nil
 }
 
 func GetVideoPage(videoId string) (*InitialPlayerResponse, error) {
 
 	videoUrl := VideoUrl(videoId)
 
-	iprReader, err := getScriptJsonReader(videoUrl, initialPlayerResponseScript)
+	scriptMatch := map[string]match_node.MatchDelegate{
+		ytInitialPlayerResponse: initialPlayerResponseScript,
+	}
+
+	scriptNodes, err := getMatchingNodes(videoUrl, scriptMatch)
 	if err != nil {
 		return nil, err
 	}
+
+	if _, ok := scriptNodes[ytInitialPlayerResponse]; !ok {
+		return nil, ErrorMissingRequiredNode
+	}
+
+	iprReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialPlayerResponse].Data))
 
 	var ipr InitialPlayerResponse
 	if err := json.NewDecoder(iprReader).Decode(&ipr); err != nil {

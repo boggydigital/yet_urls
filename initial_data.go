@@ -1,9 +1,12 @@
 package yt_urls
 
 import (
-	"fmt"
 	"golang.org/x/net/html"
 	"strings"
+)
+
+const (
+	ytInitialData = "var ytInitialData"
 )
 
 //initialDataScript is an HTML node filter for YouTube <script> text content
@@ -59,21 +62,22 @@ type PlaylistVideoRenderer struct {
 	} `json:"title"`
 }
 
+type ContinuationEndpoint struct {
+	CommandMetadata struct {
+		WebCommandMetadata struct {
+			SendPost bool   `json:"sendPost"`
+			ApiUrl   string `json:"apiUrl"`
+		} `json:"webCommandMetadata"`
+	} `json:"commandMetadata"`
+	ContinuationCommand struct {
+		Token   string `json:"token"`
+		Request string `json:"request"`
+	} `json:"continuationCommand"`
+}
+
 type ContinuationItemRenderer struct {
-	Trigger              string `json:"trigger"`
-	ContinuationEndpoint struct {
-		ClickTrackingParams string `json:"clickTrackingParams"`
-		CommandMetadata     struct {
-			WebCommandMetadata struct {
-				SendPost bool   `json:"sendPost"`
-				ApiUrl   string `json:"apiUrl"`
-			} `json:"webCommandMetadata"`
-		} `json:"commandMetadata"`
-		ContinuationCommand struct {
-			Token   string `json:"token"`
-			Request string `json:"request"`
-		} `json:"continuationCommand"`
-	} `json:"continuationEndpoint"`
+	Trigger              string               `json:"trigger"`
+	ContinuationEndpoint ContinuationEndpoint `json:"continuationEndpoint"`
 }
 
 type VideoIdTitle struct {
@@ -91,37 +95,4 @@ func (id *InitialData) playlistVideoListContent() []PlaylistVideoListRendererCon
 		}
 	}
 	return pvlc
-}
-
-func (id *InitialData) Videos() []VideoIdTitle {
-	var vits []VideoIdTitle
-	pvlc := id.playlistVideoListContent()
-	vits = make([]VideoIdTitle, 0, len(pvlc))
-	for _, vlc := range pvlc {
-		videoId := vlc.PlaylistVideoRenderer.VideoId
-		if videoId == "" {
-			continue
-		}
-		title := vlc.PlaylistVideoRenderer.Title.Runs[0].Text
-		for ii := 1; ii < len(vlc.PlaylistVideoRenderer.Title.Runs); ii++ {
-			title += vlc.PlaylistVideoRenderer.Title.Runs[ii].Text
-		}
-		vits = append(vits, VideoIdTitle{
-			VideoId: videoId,
-			Title:   title,
-		})
-	}
-	return vits
-}
-
-func (id *InitialData) NextPage() (*InitialData, error) {
-	pvlc := id.playlistVideoListContent()
-	for i := len(pvlc) - 1; i >= 0; i-- {
-		vlc := pvlc[i]
-		if vlc.ContinuationItemRenderer.Trigger == "" {
-			continue
-		}
-		fmt.Println(vlc.ContinuationItemRenderer)
-	}
-	return nil, nil
 }

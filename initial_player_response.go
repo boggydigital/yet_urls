@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	ytInitialPlayerResponse = "var ytInitialPlayerResponse ="
+	ytInitialPlayerResponse = "var ytInitialPlayerResponse"
 )
 
 //iprScriptTextContent is an HTML node filter for YouTube <script> text content
