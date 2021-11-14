@@ -16,8 +16,8 @@ const (
 )
 
 var (
-	ErrorSignatureCipher     = errors.New("signatureCipher")
-	ErrorMissingRequiredNode = errors.New("missing required node")
+	ErrSignatureCipher     = errors.New("signatureCipher")
+	ErrMissingRequiredNode = errors.New("missing required node")
 )
 
 func getMatchingNodes(
@@ -61,7 +61,7 @@ func GetVideoPage(videoId string) (*InitialPlayerResponse, error) {
 	}
 
 	if _, ok := scriptNodes[ytInitialPlayerResponse]; !ok {
-		return nil, ErrorMissingRequiredNode
+		return nil, ErrMissingRequiredNode
 	}
 
 	iprReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialPlayerResponse].Data))
@@ -88,7 +88,7 @@ func GetVideoPage(videoId string) (*InitialPlayerResponse, error) {
 
 	if len(formats) == 0 && signatureCipher {
 		//TODO: support signature cipher YouTube URLs
-		return nil, ErrorSignatureCipher
+		return nil, ErrSignatureCipher
 	}
 
 	return &ipr, nil

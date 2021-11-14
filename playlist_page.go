@@ -19,7 +19,7 @@ func GetPlaylistPage(playlistId string) (*ContextualPlaylist, error) {
 	}
 
 	if _, ok := scriptNodes[ytInitialData]; !ok {
-		return nil, ErrorMissingRequiredNode
+		return nil, ErrMissingRequiredNode
 	}
 	idReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialData].Data))
 
@@ -29,7 +29,7 @@ func GetPlaylistPage(playlistId string) (*ContextualPlaylist, error) {
 	}
 
 	if _, ok := scriptNodes[ytCfg]; !ok {
-		return nil, ErrorMissingRequiredNode
+		return nil, ErrMissingRequiredNode
 	}
 	itcReader := strings.NewReader(extractYtCfgJsonObject(scriptNodes[ytCfg].Data))
 

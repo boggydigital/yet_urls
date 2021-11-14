@@ -4,6 +4,7 @@ import (
 	"golang.org/x/net/html"
 	"sort"
 	"strings"
+	"time"
 )
 
 const (
@@ -43,6 +44,12 @@ type InitialPlayerResponse struct {
 		Title     string `json:"title"`
 		ChannelId string `json:"channelId"`
 	} `json:"videoDetails"`
+	Microformat struct {
+		PlayerMicroformatRenderer struct {
+			PublishDate string `json:"publishDate"`
+			UploadDate  string `json:"uploadDate"`
+		} `json:"playerMicroformatRenderer"`
+	} `json:"microformat"`
 }
 
 func (ipr *InitialPlayerResponse) Title() string {
@@ -56,4 +63,20 @@ func (ipr *InitialPlayerResponse) StreamingFormats() StreamingFormats {
 
 func (ipr *InitialPlayerResponse) ChannelId() string {
 	return ipr.VideoDetails.ChannelId
+}
+
+func parseDateOrDefault(date string) time.Time {
+	tm, err := time.Parse("2006-01-02", date)
+	if err != nil {
+		return time.Now()
+	}
+	return tm
+}
+
+func (ipr *InitialPlayerResponse) PublishDate() time.Time {
+	return parseDateOrDefault(ipr.Microformat.PlayerMicroformatRenderer.PublishDate)
+}
+
+func (ipr *InitialPlayerResponse) UploadDate() time.Time {
+	return parseDateOrDefault(ipr.Microformat.PlayerMicroformatRenderer.UploadDate)
 }
