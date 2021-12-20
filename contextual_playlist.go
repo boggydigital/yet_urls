@@ -49,7 +49,7 @@ func (cp *ContextualPlaylist) continuationEndpoint() *ContinuationEndpoint {
 	return nil
 }
 
-func (cp *ContextualPlaylist) Continue() (*ContextualPlaylist, error) {
+func (cp *ContextualPlaylist) Continue(client *http.Client) (*ContextualPlaylist, error) {
 
 	if !cp.HasContinuation() {
 		return nil, nil
@@ -71,7 +71,7 @@ func (cp *ContextualPlaylist) Continue() (*ContextualPlaylist, error) {
 		contEndpoint.CommandMetadata.WebCommandMetadata.ApiUrl,
 		cp.Context.APIKey)
 
-	resp, err := http.Post(browseUrl.String(), contentType, b)
+	resp, err := client.Post(browseUrl.String(), contentType, b)
 	defer resp.Body.Close()
 
 	if err != nil {

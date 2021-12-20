@@ -3,17 +3,18 @@ package yt_urls
 import (
 	"encoding/json"
 	"github.com/boggydigital/match_node"
+	"net/http"
 	"strings"
 )
 
-func GetPlaylistPage(playlistId string) (*ContextualPlaylist, error) {
+func GetPlaylistPage(client *http.Client, playlistId string) (*ContextualPlaylist, error) {
 	playlistUrl := PlaylistUrl(playlistId)
 
 	scriptMatches := make(map[string]match_node.MatchDelegate)
 	scriptMatches[ytInitialData] = initialDataScript
 	scriptMatches[ytCfg] = ytCfgScript
 
-	scriptNodes, err := getMatchingNodes(playlistUrl, scriptMatches)
+	scriptNodes, err := getMatchingNodes(client, playlistUrl, scriptMatches)
 	if err != nil {
 		return nil, err
 	}
