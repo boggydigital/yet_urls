@@ -5,10 +5,11 @@ import (
 )
 
 const (
-	videoParam  = "v"
-	httpsScheme = "https"
-	youtubeHost = "www.youtube.com"
-	watchPath   = "watch"
+	videoParam     = "v"
+	httpsScheme    = "https"
+	YoutubeHost    = "youtube.com"
+	youtubeWwwHost = "www." + YoutubeHost
+	watchPath      = "watch"
 )
 
 //VideoUrl provides a URL for a video-id,
@@ -16,7 +17,7 @@ const (
 func VideoUrl(videoId string) *url.URL {
 	watchUrl := &url.URL{
 		Scheme: httpsScheme,
-		Host:   youtubeHost,
+		Host:   youtubeWwwHost,
 		Path:   watchPath,
 	}
 

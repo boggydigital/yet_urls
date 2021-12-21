@@ -12,7 +12,7 @@ const (
 func PlaylistUrl(playlistId string) *url.URL {
 	playlistUrl := &url.URL{
 		Scheme: httpsScheme,
-		Host:   youtubeHost,
+		Host:   youtubeWwwHost,
 		Path:   playlistPath,
 	}
 

@@ -10,7 +10,7 @@ const (
 func BrowseUrl(path, apiKey string) *url.URL {
 	browseUrl := &url.URL{
 		Scheme: httpsScheme,
-		Host:   youtubeHost,
+		Host:   youtubeWwwHost,
 		Path:   path,
 	}
 
