@@ -10,6 +10,8 @@ const (
 	YoutubeHost    = "youtube.com"
 	youtubeWwwHost = "www." + YoutubeHost
 	watchPath      = "watch"
+	mp4Ext         = ".mp4"
+	DefaultExt     = mp4Ext
 )
 
 //VideoUrl provides a URL for a video-id,
