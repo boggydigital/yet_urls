@@ -3,8 +3,8 @@ package yt_urls
 import "strings"
 
 const (
-	videoMIMETypePrefix = "video"
-	audioMIMETypePrefix = "audio"
+	videoMIMETypePrefix = "video/mp4"
+	audioMIMETypePrefix = "audio/mp4"
 )
 
 type Range struct {
