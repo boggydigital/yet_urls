@@ -52,21 +52,21 @@ func (ipr *InitialPlayerResponse) Title() string {
 	return ipr.VideoDetails.Title
 }
 
-func (ipr *InitialPlayerResponse) Formats() *Formats {
+func (ipr *InitialPlayerResponse) Formats() Formats {
 	sort.Sort(sort.Reverse(ipr.StreamingData.Formats))
-	return &ipr.StreamingData.Formats
+	return ipr.StreamingData.Formats
 }
 
-func (ipr *InitialPlayerResponse) AdaptiveVideoFormats() *Formats {
+func (ipr *InitialPlayerResponse) AdaptiveVideoFormats() Formats {
 	vfs := ipr.StreamingData.AdaptiveFormats.Video()
 	sort.Sort(vfs)
-	return &vfs
+	return vfs
 }
 
-func (ipr *InitialPlayerResponse) AdaptiveAudioFormats() *Formats {
+func (ipr *InitialPlayerResponse) AdaptiveAudioFormats() Formats {
 	afs := ipr.StreamingData.AdaptiveFormats.Audio()
 	sort.Sort(afs)
-	return &afs
+	return afs
 }
 
 func (ipr *InitialPlayerResponse) ChannelId() string {
