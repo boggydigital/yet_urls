@@ -31,13 +31,9 @@ type InitialPlayerResponse struct {
 		Reason string `json:"reason"`
 	} `json:"playabilityStatus"`
 	StreamingData struct {
-		//use of Formats and not AdaptiveFormats is intentional, even though the former seems
-		//to be capped at 720p. AdaptiveFormats come as a separate video and audio tracks and
-		//would require merging those two together.
-		//Formats on the other hand contain URLs to files that contain both video and audio.
-		//If you have a need for something more complex or flexible - you should consider
-		//youtube-dl or any of the alternatives available
-		Formats StreamingFormats `json:"formats"`
+		ExpiresInSeconds string  `json:"expiresInSeconds"`
+		Formats          Formats `json:"formats"`
+		AdaptiveFormats  Formats `json:"adaptiveFormats"`
 	} `json:"streamingData"`
 	VideoDetails struct {
 		VideoId   string `json:"videoId"`
@@ -56,9 +52,21 @@ func (ipr *InitialPlayerResponse) Title() string {
 	return ipr.VideoDetails.Title
 }
 
-func (ipr *InitialPlayerResponse) StreamingFormats() StreamingFormats {
+func (ipr *InitialPlayerResponse) Formats() Formats {
 	sort.Sort(sort.Reverse(ipr.StreamingData.Formats))
 	return ipr.StreamingData.Formats
+}
+
+func (ipr *InitialPlayerResponse) AdaptiveVideoFormats() Formats {
+	vfs := ipr.StreamingData.AdaptiveFormats.Video()
+	sort.Sort(vfs)
+	return vfs
+}
+
+func (ipr *InitialPlayerResponse) AdaptiveAudioFormats() Formats {
+	afs := ipr.StreamingData.AdaptiveFormats.Audio()
+	sort.Sort(afs)
+	return afs
 }
 
 func (ipr *InitialPlayerResponse) ChannelId() string {

@@ -11,6 +11,7 @@ const (
 	youtubeWwwHost = "www." + YoutubeHost
 	watchPath      = "watch"
 	mp4Ext         = ".mp4"
+	webmExt        = ".webm"
 	DefaultExt     = mp4Ext
 )
 
