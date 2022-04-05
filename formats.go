@@ -3,8 +3,10 @@ package yt_urls
 import "strings"
 
 const (
-	videoMIMETypePrefix = "video/mp4"
-	audioMIMETypePrefix = "audio/mp4"
+	videoMIMETypePrefix          = "video"
+	preferredVideoMIMETypePrefix = "video/mp4; codecs=\"avc1"
+	audioMIMETypePrefix          = "audio"
+	preferredAudioMIMETypePrefix = "audio/mp4; codecs=\"mp4a"
 )
 
 type Range struct {
@@ -67,8 +69,16 @@ func (fs Formats) Video() Formats {
 	return fs.filterByMIMETypePrefix(videoMIMETypePrefix)
 }
 
+func (fs Formats) PreferredVideo() Formats {
+	return fs.filterByMIMETypePrefix(preferredVideoMIMETypePrefix)
+}
+
 func (fs Formats) Audio() Formats {
 	return fs.filterByMIMETypePrefix(audioMIMETypePrefix)
+}
+
+func (fs Formats) PreferredAudio() Formats {
+	return fs.filterByMIMETypePrefix(preferredAudioMIMETypePrefix)
 }
 
 var mimeExt = map[string]string{
