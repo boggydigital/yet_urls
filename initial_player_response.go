@@ -58,13 +58,13 @@ func (ipr *InitialPlayerResponse) Formats() Formats {
 }
 
 func (ipr *InitialPlayerResponse) AdaptiveVideoFormats() Formats {
-	vfs := ipr.StreamingData.AdaptiveFormats.Video()
+	vfs := ipr.StreamingData.AdaptiveFormats.PreferredVideo()
 	sort.Sort(sort.Reverse(vfs))
 	return vfs
 }
 
 func (ipr *InitialPlayerResponse) AdaptiveAudioFormats() Formats {
-	afs := ipr.StreamingData.AdaptiveFormats.Audio()
+	afs := ipr.StreamingData.AdaptiveFormats.PreferredAudio()
 	sort.Sort(sort.Reverse(afs))
 	return afs
 }
