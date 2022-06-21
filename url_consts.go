@@ -7,7 +7,7 @@ const (
 	ytImgHost           = "i.ytimg.com"
 	youtubeWwwHost      = "www." + YoutubeHost
 	watchPath           = "watch"
-	viPath              = "vi"
+	viPath              = "/vi"
 	mp4Ext              = ".mp4"
 	webmExt             = ".webm"
 	jpegExt             = ".jpg"
