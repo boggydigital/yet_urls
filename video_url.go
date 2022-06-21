@@ -4,17 +4,6 @@ import (
 	"net/url"
 )
 
-const (
-	videoParam     = "v"
-	httpsScheme    = "https"
-	YoutubeHost    = "youtube.com"
-	youtubeWwwHost = "www." + YoutubeHost
-	watchPath      = "watch"
-	mp4Ext         = ".mp4"
-	webmExt        = ".webm"
-	DefaultExt     = mp4Ext
-)
-
 //VideoUrl provides a URL for a video-id,
 //e.g. http://www.youtube.com/watch?v=video-id1 for "video-id1"
 func VideoUrl(videoId string) *url.URL {
