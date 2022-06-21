@@ -4,8 +4,8 @@ const (
 	videoParam          = "v"
 	httpsScheme         = "https"
 	YoutubeHost         = "youtube.com"
+	ytImgHost           = "i.ytimg.com"
 	youtubeWwwHost      = "www." + YoutubeHost
-	youtubeImgHost      = "img." + YoutubeHost
 	watchPath           = "watch"
 	viPath              = "vi"
 	mp4Ext              = ".mp4"

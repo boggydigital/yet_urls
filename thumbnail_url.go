@@ -12,7 +12,7 @@ func ThumbnailUrl(videoId string, tq ThumbnailQuality) *url.URL {
 	}
 	return &url.URL{
 		Scheme: httpsScheme,
-		Host:   youtubeImgHost,
+		Host:   ytImgHost,
 		Path:   path.Join(viPath, videoId, qualityFilename+jpegExt),
 	}
 }
