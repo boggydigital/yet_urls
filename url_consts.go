@@ -1,17 +1,18 @@
 package yt_urls
 
 const (
-	videoParam     = "v"
-	httpsScheme    = "https"
-	YoutubeHost    = "youtube.com"
-	youtubeWwwHost = "www." + YoutubeHost
-	youtubeImgHost = "img." + YoutubeHost
-	watchPath      = "watch"
-	viPath         = "vi"
-	mp4Ext         = ".mp4"
-	webmExt        = ".webm"
-	jpegExt        = ".jpg"
-	DefaultExt     = mp4Ext
+	videoParam          = "v"
+	httpsScheme         = "https"
+	YoutubeHost         = "youtube.com"
+	youtubeWwwHost      = "www." + YoutubeHost
+	youtubeImgHost      = "img." + YoutubeHost
+	watchPath           = "watch"
+	viPath              = "vi"
+	mp4Ext              = ".mp4"
+	webmExt             = ".webm"
+	jpegExt             = ".jpg"
+	DefaultVideoExt     = mp4Ext
+	DefaultThumbnailExt = jpegExt
 )
 
 type ThumbnailQuality int

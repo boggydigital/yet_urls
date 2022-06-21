@@ -92,10 +92,10 @@ func (f Format) Ext() string {
 	mt := f.MIMEType
 	mime, _, ok := strings.Cut(mt, ";")
 	if !ok {
-		return DefaultExt
+		return DefaultVideoExt
 	}
 	if ext, ok := mimeExt[mime]; ok {
 		return ext
 	}
-	return DefaultExt
+	return DefaultVideoExt
 }
