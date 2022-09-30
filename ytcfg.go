@@ -16,9 +16,11 @@ func extractYtCfgJsonObject(data string) string {
 	return data[fi+len(opYtCfgMarker)-1 : li+1]
 }
 
+type ytCfgScriptMatcher struct{}
+
 //ytCfgScript is an HTML node filter for YouTube <script> text content
 //that contains ytcfg initialization data
-func ytCfgScript(node *html.Node) bool {
+func (ytcsm *ytCfgScriptMatcher) Match(node *html.Node) bool {
 	if node.Type != html.TextNode ||
 		node.Parent == nil ||
 		node.Parent.Data != "script" {

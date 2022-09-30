@@ -10,9 +10,9 @@ import (
 func GetPlaylistPage(client *http.Client, playlistId string) (*ContextualPlaylist, error) {
 	playlistUrl := PlaylistUrl(playlistId)
 
-	scriptMatches := make(map[string]match_node.MatchDelegate)
-	scriptMatches[ytInitialData] = initialDataScript
-	scriptMatches[ytCfg] = ytCfgScript
+	scriptMatches := make(map[string]match_node.Matcher)
+	scriptMatches[ytInitialData] = &initialDataScriptMatcher{}
+	scriptMatches[ytCfg] = &ytCfgScriptMatcher{}
 
 	scriptNodes, err := getMatchingNodes(client, playlistUrl, scriptMatches)
 	if err != nil {

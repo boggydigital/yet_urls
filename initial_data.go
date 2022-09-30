@@ -9,9 +9,11 @@ const (
 	ytInitialData = "var ytInitialData"
 )
 
+type initialDataScriptMatcher struct{}
+
 //initialDataScript is an HTML node filter for YouTube <script> text content
 //that contains ytInitialData
-func initialDataScript(node *html.Node) bool {
+func (idsm *initialDataScriptMatcher) Match(node *html.Node) bool {
 	if node.Type != html.TextNode ||
 		node.Parent == nil ||
 		node.Parent.Data != "script" {

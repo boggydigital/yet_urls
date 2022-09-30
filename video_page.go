@@ -23,7 +23,7 @@ var (
 func getMatchingNodes(
 	client *http.Client,
 	u *url.URL,
-	matches map[string]match_node.MatchDelegate) (map[string]*html.Node, error) {
+	matches map[string]match_node.Matcher) (map[string]*html.Node, error) {
 
 	resp, err := client.Get(u.String())
 	if err != nil {
@@ -52,8 +52,8 @@ func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, 
 
 	videoUrl := VideoUrl(videoId)
 
-	scriptMatch := map[string]match_node.MatchDelegate{
-		ytInitialPlayerResponse: initialPlayerResponseScript,
+	scriptMatch := map[string]match_node.Matcher{
+		ytInitialPlayerResponse: &initialPlayerResponseMatcher{},
 	}
 
 	scriptNodes, err := getMatchingNodes(client, videoUrl, scriptMatch)

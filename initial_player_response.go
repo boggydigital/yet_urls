@@ -11,9 +11,12 @@ const (
 	ytInitialPlayerResponse = "var ytInitialPlayerResponse"
 )
 
+type initialPlayerResponseMatcher struct {
+}
+
 //iprScriptTextContent is an HTML node filter for YouTube <script> text content
 //that contains ytInitialPlayerResponse data
-func initialPlayerResponseScript(node *html.Node) bool {
+func (iprm *initialPlayerResponseMatcher) Match(node *html.Node) bool {
 	if node.Type != html.TextNode ||
 		node.Parent == nil ||
 		node.Parent.Data != "script" {
