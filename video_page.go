@@ -73,7 +73,9 @@ func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, 
 	}
 
 	if ipr.PlayabilityStatus.Status != StatusOK {
-		return nil, fmt.Errorf(ipr.PlayabilityStatus.Status)
+		return nil, fmt.Errorf("%s: %s",
+			ipr.PlayabilityStatus.Reason,
+			ipr.PlayabilityStatus.ErrorScreen.PlayerErrorMessageRenderer.SubReason.SimpleText)
 	}
 
 	signatureCipher := false

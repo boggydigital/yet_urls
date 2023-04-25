@@ -14,8 +14,8 @@ const (
 type initialPlayerResponseMatcher struct {
 }
 
-//iprScriptTextContent is an HTML node filter for YouTube <script> text content
-//that contains ytInitialPlayerResponse data
+// iprScriptTextContent is an HTML node filter for YouTube <script> text content
+// that contains ytInitialPlayerResponse data
 func (iprm *initialPlayerResponseMatcher) Match(node *html.Node) bool {
 	if node.Type != html.TextNode ||
 		node.Parent == nil ||
@@ -26,12 +26,19 @@ func (iprm *initialPlayerResponseMatcher) Match(node *html.Node) bool {
 	return strings.HasPrefix(node.Data, ytInitialPlayerResponse)
 }
 
-//InitialPlayerResponse is a minimal set of data structures required to decode and
-//extract streaming data formats for video URL ytInitialPlayerResponse
+// InitialPlayerResponse is a minimal set of data structures required to decode and
+// extract streaming data formats for video URL ytInitialPlayerResponse
 type InitialPlayerResponse struct {
 	PlayabilityStatus struct {
-		Status string `json:"status"`
-		Reason string `json:"reason"`
+		Status      string `json:"status"`
+		Reason      string `json:"reason"`
+		ErrorScreen struct {
+			PlayerErrorMessageRenderer struct {
+				SubReason struct {
+					SimpleText string `json:"simpleText"`
+				} `json:"subreason"`
+			} `json:"playerErrorMessageRenderer"`
+		} `json:"errorScreen"`
 	} `json:"playabilityStatus"`
 	StreamingData struct {
 		ExpiresInSeconds string  `json:"expiresInSeconds"`
