@@ -14,7 +14,14 @@ func GetPlaylistPage(client *http.Client, playlistId string) (*ContextualPlaylis
 	scriptMatches[ytInitialData] = &initialDataScriptMatcher{}
 	scriptMatches[ytCfg] = &ytCfgScriptMatcher{}
 
-	scriptNodes, err := getMatchingNodes(client, playlistUrl, scriptMatches)
+	resp, err := client.Get(playlistUrl.String())
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
+
+	scriptNodes, err := getMatchingNodes(resp.Body, scriptMatches)
 	if err != nil {
 		return nil, err
 	}
