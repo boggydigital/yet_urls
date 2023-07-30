@@ -41,20 +41,25 @@ func getMatchingNodes(
 	return nodes, nil
 }
 
-const playerUrlSfx = "/player_ias.vflset/en_US/base.js"
+const (
+	playerUrlKey = "player_ias.vflset"
+	playerUrlSfx = "base.js"
+)
 
 type playerScriptMatcher struct{}
 
 func (psm *playerScriptMatcher) Match(node *html.Node) bool {
-	if node.DataAtom != atom.Script ||
+	if (node.DataAtom != atom.Script && node.DataAtom != atom.Link) ||
 		len(node.Attr) < 1 {
 		return false
 	}
 
 	for _, attr := range node.Attr {
-		if attr.Key == "src" &&
-			strings.HasSuffix(attr.Val, playerUrlSfx) {
-			return true
+		if (node.DataAtom == atom.Script && attr.Key == "src") ||
+			(node.DataAtom == atom.Link && attr.Key == "href") {
+			if strings.HasSuffix(attr.Val, playerUrlSfx) && strings.Contains(attr.Val, playerUrlKey) {
+				return true
+			}
 		}
 	}
 
