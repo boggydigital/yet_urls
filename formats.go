@@ -14,7 +14,7 @@ type Range struct {
 	End   string `json:"end"`
 }
 
-//Format captures stream data provided by YouTube
+// Format captures stream data provided by YouTube
 type Format struct {
 	iTag             int     `json:"itag"`
 	Url              string  `json:"url"`
@@ -47,7 +47,7 @@ func (fs Formats) Len() int {
 }
 
 func (fs Formats) Less(i, j int) bool {
-	return fs[i].Bitrate < fs[j].Bitrate
+	return fs[i].AverageBitrate < fs[j].AverageBitrate
 }
 
 func (fs Formats) Swap(i, j int) {
