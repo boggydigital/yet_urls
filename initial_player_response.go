@@ -69,7 +69,9 @@ type InitialPlayerResponse struct {
 	} `json:"videoDetails"`
 	Microformat struct {
 		PlayerMicroformatRenderer struct {
-			Thumbnail          Thumbnail  `json:"thumbnail"`
+			Thumbnail struct {
+				Thumbnails []Thumbnail `json:"thumbnails"`
+			} `json:"thumbnail"`
 			Title              SimpleText `json:"title"`
 			Description        SimpleText `json:"description"`
 			OwnerProfileUrl    string     `json:"ownerProfileUrl"`
