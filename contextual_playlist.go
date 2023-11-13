@@ -7,14 +7,14 @@ import (
 )
 
 type ContextualPlaylist struct {
-	Playlist []PlaylistVideoListRendererContent
+	Playlist *PlaylistContent
 	Context  *ytCfgInnerTubeContext
 }
 
 func (cp *ContextualPlaylist) Videos() []VideoIdTitleChannel {
 	var vits []VideoIdTitleChannel
-	vits = make([]VideoIdTitleChannel, 0, len(cp.Playlist))
-	for _, vlc := range cp.Playlist {
+	vits = make([]VideoIdTitleChannel, 0, len(cp.Playlist.Content))
+	for _, vlc := range cp.Playlist.Content {
 		videoId := vlc.PlaylistVideoRenderer.VideoId
 		if videoId == "" {
 			continue
@@ -37,8 +37,8 @@ func (cp *ContextualPlaylist) Videos() []VideoIdTitleChannel {
 }
 
 func (cp *ContextualPlaylist) HasContinuation() bool {
-	for i := len(cp.Playlist) - 1; i >= 0; i-- {
-		if cp.Playlist[i].ContinuationItemRenderer.Trigger != "" {
+	for i := len(cp.Playlist.Content) - 1; i >= 0; i-- {
+		if cp.Playlist.Content[i].ContinuationItemRenderer.Trigger != "" {
 			return true
 		}
 	}
@@ -46,9 +46,9 @@ func (cp *ContextualPlaylist) HasContinuation() bool {
 }
 
 func (cp *ContextualPlaylist) continuationEndpoint() *ContinuationEndpoint {
-	for i := len(cp.Playlist) - 1; i >= 0; i-- {
-		if cp.Playlist[i].ContinuationItemRenderer.Trigger != "" {
-			return &cp.Playlist[i].ContinuationItemRenderer.ContinuationEndpoint
+	for i := len(cp.Playlist.Content) - 1; i >= 0; i-- {
+		if cp.Playlist.Content[i].ContinuationItemRenderer.Trigger != "" {
+			return &cp.Playlist.Content[i].ContinuationItemRenderer.ContinuationEndpoint
 		}
 	}
 	return nil
@@ -88,8 +88,10 @@ func (cp *ContextualPlaylist) Continue(client *http.Client) (*ContextualPlaylist
 		return nil, err
 	}
 
+	cp.Playlist.Content = br.OnResponseReceivedActions[0].AppendContinuationItemsAction.ContinuationItems
+
 	return &ContextualPlaylist{
-		Playlist: br.OnResponseReceivedActions[0].AppendContinuationItemsAction.ContinuationItems,
+		Playlist: cp.Playlist,
 		Context:  cp.Context,
 	}, nil
 }

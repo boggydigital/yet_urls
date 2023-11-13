@@ -23,9 +23,23 @@ func (idsm *initialDataScriptMatcher) Match(node *html.Node) bool {
 	return strings.HasPrefix(node.Data, ytInitialData)
 }
 
-// InitialData is a minimal set of data structures required to decode and
+type PlaylistHeaderRenderer struct {
+	PlaylistId string `json:"playlistId"`
+	Title      struct {
+		SimpleText string `json:"simpleText"`
+	} `json:"title"`
+	PlaylistHeaderBanner struct {
+		HeroPlaylistThumbnailRenderer struct {
+			Thumbnail struct {
+				Thumbnails []Thumbnail `json:"thumbnails"`
+			} `json:"thumbnail"`
+		} `json:"heroPlaylistThumbnailRenderer"`
+	} `json:"playlistHeaderBanner"`
+}
+
+// PlaylistInitialData is a minimal set of data structures required to decode and
 // extract videoIds for playlist URL ytInitialData
-type InitialData struct {
+type PlaylistInitialData struct {
 	Contents struct {
 		TwoColumnBrowseResultsRenderer struct {
 			Tabs []struct {
@@ -48,6 +62,9 @@ type InitialData struct {
 			} `json:"tabs"`
 		} `json:"twoColumnBrowseResultsRenderer"`
 	} `json:"contents"`
+	Header struct {
+		PlaylistHeaderRenderer PlaylistHeaderRenderer `json:"playlistHeaderRenderer"`
+	} `json:"header"`
 }
 
 type PlaylistVideoListRendererContent struct {
@@ -94,7 +111,14 @@ type VideoIdTitleChannel struct {
 	Channel string
 }
 
-func (id *InitialData) playlistVideoListContent() []PlaylistVideoListRendererContent {
+type PlaylistContent struct {
+	Header  PlaylistHeaderRenderer
+	Content []PlaylistVideoListRendererContent
+}
+
+func (id *PlaylistInitialData) playlistContent() *PlaylistContent {
+	pc := &PlaylistContent{}
+
 	pvlc := make([]PlaylistVideoListRendererContent, 0)
 	for _, tab := range id.Contents.TwoColumnBrowseResultsRenderer.Tabs {
 		for _, sectionList := range tab.TabRenderer.Content.SectionListRenderer.Contents {
@@ -103,5 +127,9 @@ func (id *InitialData) playlistVideoListContent() []PlaylistVideoListRendererCon
 			}
 		}
 	}
-	return pvlc
+
+	pc.Header = id.Header.PlaylistHeaderRenderer
+	pc.Content = pvlc
+
+	return pc
 }

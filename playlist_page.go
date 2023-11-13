@@ -31,8 +31,8 @@ func GetPlaylistPage(client *http.Client, playlistId string) (*ContextualPlaylis
 	}
 	idReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialData].Data))
 
-	var id InitialData
-	if err := json.NewDecoder(idReader).Decode(&id); err != nil {
+	var pid PlaylistInitialData
+	if err := json.NewDecoder(idReader).Decode(&pid); err != nil {
 		return nil, err
 	}
 
@@ -47,7 +47,7 @@ func GetPlaylistPage(client *http.Client, playlistId string) (*ContextualPlaylis
 	}
 
 	return &ContextualPlaylist{
-		Playlist: id.playlistVideoListContent(),
+		Playlist: pid.playlistContent(),
 		Context:  &itc,
 	}, nil
 }
