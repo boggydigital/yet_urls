@@ -11,8 +11,8 @@ const (
 
 type initialDataScriptMatcher struct{}
 
-//initialDataScript is an HTML node filter for YouTube <script> text content
-//that contains ytInitialData
+// initialDataScript is an HTML node filter for YouTube <script> text content
+// that contains ytInitialData
 func (idsm *initialDataScriptMatcher) Match(node *html.Node) bool {
 	if node.Type != html.TextNode ||
 		node.Parent == nil ||
@@ -23,8 +23,8 @@ func (idsm *initialDataScriptMatcher) Match(node *html.Node) bool {
 	return strings.HasPrefix(node.Data, ytInitialData)
 }
 
-//InitialData is a minimal set of data structures required to decode and
-//extract videoIds for playlist URL ytInitialData
+// InitialData is a minimal set of data structures required to decode and
+// extract videoIds for playlist URL ytInitialData
 type InitialData struct {
 	Contents struct {
 		TwoColumnBrowseResultsRenderer struct {
@@ -62,6 +62,12 @@ type PlaylistVideoRenderer struct {
 			Text string `json:"text"`
 		} `json:"runs"`
 	} `json:"title"`
+	// normally contains video channel title
+	ShortBylineText struct {
+		Runs []struct {
+			Text string `json:"text"`
+		} `json:"runs"`
+	} `json:"shortBylineText"`
 }
 
 type ContinuationEndpoint struct {
@@ -82,9 +88,10 @@ type ContinuationItemRenderer struct {
 	ContinuationEndpoint ContinuationEndpoint `json:"continuationEndpoint"`
 }
 
-type VideoIdTitle struct {
+type VideoIdTitleChannel struct {
 	VideoId string
 	Title   string
+	Channel string
 }
 
 func (id *InitialData) playlistVideoListContent() []PlaylistVideoListRendererContent {

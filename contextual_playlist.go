@@ -11,21 +11,26 @@ type ContextualPlaylist struct {
 	Context  *ytCfgInnerTubeContext
 }
 
-func (cp *ContextualPlaylist) Videos() []VideoIdTitle {
-	var vits []VideoIdTitle
-	vits = make([]VideoIdTitle, 0, len(cp.Playlist))
+func (cp *ContextualPlaylist) Videos() []VideoIdTitleChannel {
+	var vits []VideoIdTitleChannel
+	vits = make([]VideoIdTitleChannel, 0, len(cp.Playlist))
 	for _, vlc := range cp.Playlist {
 		videoId := vlc.PlaylistVideoRenderer.VideoId
 		if videoId == "" {
 			continue
 		}
-		title := vlc.PlaylistVideoRenderer.Title.Runs[0].Text
-		for ii := 1; ii < len(vlc.PlaylistVideoRenderer.Title.Runs); ii++ {
-			title += vlc.PlaylistVideoRenderer.Title.Runs[ii].Text
+		title, titleRuns := "", vlc.PlaylistVideoRenderer.Title.Runs
+		for _, r := range titleRuns {
+			title += r.Text
 		}
-		vits = append(vits, VideoIdTitle{
+		sbTitle, sbTitleRuns := "", vlc.PlaylistVideoRenderer.ShortBylineText.Runs
+		for _, r := range sbTitleRuns {
+			sbTitle += r.Text
+		}
+		vits = append(vits, VideoIdTitleChannel{
 			VideoId: videoId,
 			Title:   title,
+			Channel: sbTitle,
 		})
 	}
 	return vits
