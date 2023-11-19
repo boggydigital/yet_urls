@@ -36,6 +36,16 @@ type SimpleText struct {
 	SimpleText string `json:"simpleText"`
 }
 
+type CaptionTrack struct {
+	BaseUrl        string     `json:"baseUrl"`
+	Name           SimpleText `json:"name"`
+	VSSId          string     `json:"vssId"`
+	LanguageCode   string     `json:"languageCode"`
+	Kind           string     `json:"kind"`
+	IsTranslatable bool       `json:"isTranslatable"`
+	TrackName      string     `json:"trackName"`
+}
+
 // InitialPlayerResponse is a minimal set of data structures required to decode and
 // extract streaming data formats for video URL ytInitialPlayerResponse
 type InitialPlayerResponse struct {
@@ -88,16 +98,8 @@ type InitialPlayerResponse struct {
 	} `json:"microformat"`
 	Captions struct {
 		PlayerCaptionsTracklistRenderer struct {
-			CaptionTracks []struct {
-				BaseUrl        string     `json:"baseUrl"`
-				Name           SimpleText `json:"name"`
-				VSSId          string     `json:"vssId"`
-				LanguageCode   string     `json:"languageCode"`
-				Kind           string     `json:"kind"`
-				IsTranslatable bool       `json:"isTranslatable"`
-				TrackName      string     `json:"trackName"`
-			} `json:"captionTracks"`
-			AudioTracks []struct {
+			CaptionTracks []CaptionTrack `json:"captionTracks"`
+			AudioTracks   []struct {
 				CaptionTrackIndices []int `json:"captionTrackIndices"`
 			} `json:"audioTracks"`
 			TranslationLanguages []struct {
