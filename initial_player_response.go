@@ -49,6 +49,7 @@ type CaptionTrack struct {
 // InitialPlayerResponse is a minimal set of data structures required to decode and
 // extract streaming data formats for video URL ytInitialPlayerResponse
 type InitialPlayerResponse struct {
+	PlayerUrl         string
 	PlayabilityStatus struct {
 		Status      string `json:"status"`
 		Reason      string `json:"reason"`

@@ -80,7 +80,7 @@ func getPlayerUrl(body io.Reader) (string, error) {
 	return src, nil
 }
 
-func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, string, error) {
+func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, error) {
 
 	videoUrl := VideoUrl(videoId)
 
@@ -90,7 +90,7 @@ func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, 
 
 	resp, err := client.Get(videoUrl.String())
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
 	defer resp.Body.Close()
@@ -100,27 +100,27 @@ func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, 
 
 	playerUrl, err := getPlayerUrl(tr)
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
 	scriptNodes, err := getMatchingNodes(strings.NewReader(sb.String()), scriptMatch)
 	if err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
 	if _, ok := scriptNodes[ytInitialPlayerResponse]; !ok {
-		return nil, "", ErrMissingRequiredNode
+		return nil, ErrMissingRequiredNode
 	}
 
 	iprReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialPlayerResponse].Data))
 
 	var ipr InitialPlayerResponse
 	if err := json.NewDecoder(iprReader).Decode(&ipr); err != nil {
-		return nil, "", err
+		return nil, err
 	}
 
 	if ipr.PlayabilityStatus.Status != StatusOK {
-		return nil, "", fmt.Errorf("%s: %s",
+		return nil, fmt.Errorf("%s: %s",
 			ipr.PlayabilityStatus.Reason,
 			ipr.PlayabilityStatus.ErrorScreen.PlayerErrorMessageRenderer.SubReason.SimpleText)
 	}
@@ -138,8 +138,11 @@ func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, 
 
 	if len(formats) == 0 && signatureCipher {
 		//TODO: support signature cipher YouTube URLs
-		return nil, "", ErrSignatureCipher
+		return nil, ErrSignatureCipher
 	}
 
-	return &ipr, playerUrl, nil
+	// set player URL before returning
+	ipr.PlayerUrl = playerUrl
+
+	return &ipr, nil
 }
