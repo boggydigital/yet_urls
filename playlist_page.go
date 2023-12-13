@@ -47,7 +47,7 @@ func GetPlaylistPage(client *http.Client, playlistId string) (*ContextualPlaylis
 	}
 
 	return &ContextualPlaylist{
-		Playlist: pid.playlistContent(),
+		Playlist: &pid,
 		Context:  &itc,
 	}, nil
 }

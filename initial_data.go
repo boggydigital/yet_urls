@@ -35,6 +35,12 @@ type PlaylistHeaderRenderer struct {
 			} `json:"thumbnail"`
 		} `json:"heroPlaylistThumbnailRenderer"`
 	} `json:"playlistHeaderBanner"`
+	DescriptionText SimpleText `json:"descriptionText"`
+	OwnerText       struct {
+		Runs []OwnerTextRun `json:"runs"`
+	} `json:"ownerText"`
+	ViewCountText SimpleText `json:"viewCountText"`
+	Privacy       string     `json:"privacy"`
 }
 
 // PlaylistInitialData is a minimal set of data structures required to decode and
@@ -65,6 +71,26 @@ type PlaylistInitialData struct {
 	Header struct {
 		PlaylistHeaderRenderer PlaylistHeaderRenderer `json:"playlistHeaderRenderer"`
 	} `json:"header"`
+
+	videoListContent []PlaylistVideoListRendererContent
+}
+
+type OwnerTextRun struct {
+	Text               string `json:"text"`
+	NavigationEndpoint struct {
+		CommandMetadata struct {
+			WebCommandMetadata struct {
+				Url         string `json:"url"`
+				WebPageType string `json:"webPageType"`
+				RootVe      int    `json:"rootVe"`
+				ApiUrl      string `json:"apiUrl"`
+			} `json:"webCommandMetadata"`
+		} `json:"commandMetadata"`
+		BrowseEndpoint struct {
+			BrowseId         string `json:"browseId"`
+			CanonicalBaseUrl string `json:"canonicalBaseUrl"`
+		} `json:"browseEndpoint"`
+	} `json:"navigationEndpoint"`
 }
 
 type PlaylistVideoListRendererContent struct {
@@ -111,25 +137,37 @@ type VideoIdTitleChannel struct {
 	Channel string
 }
 
-type PlaylistContent struct {
-	Header  PlaylistHeaderRenderer
-	Content []PlaylistVideoListRendererContent
+func (id *PlaylistInitialData) PlaylistHeader() PlaylistHeaderRenderer {
+	return id.Header.PlaylistHeaderRenderer
 }
 
-func (id *PlaylistInitialData) playlistContent() *PlaylistContent {
-	pc := &PlaylistContent{}
+func (id *PlaylistInitialData) PlaylistContent() []PlaylistVideoListRendererContent {
 
-	pvlc := make([]PlaylistVideoListRendererContent, 0)
-	for _, tab := range id.Contents.TwoColumnBrowseResultsRenderer.Tabs {
-		for _, sectionList := range tab.TabRenderer.Content.SectionListRenderer.Contents {
-			for _, itemSection := range sectionList.ItemSectionRenderer.Contents {
-				pvlc = append(pvlc, itemSection.PlaylistVideoListRenderer.Contents...)
+	if id.videoListContent == nil {
+		pvlc := make([]PlaylistVideoListRendererContent, 0)
+
+		for _, tab := range id.Contents.TwoColumnBrowseResultsRenderer.Tabs {
+			for _, sectionList := range tab.TabRenderer.Content.SectionListRenderer.Contents {
+				for _, itemSection := range sectionList.ItemSectionRenderer.Contents {
+					pvlc = append(pvlc, itemSection.PlaylistVideoListRenderer.Contents...)
+				}
 			}
 		}
+
+		id.videoListContent = pvlc
 	}
 
-	pc.Header = id.Header.PlaylistHeaderRenderer
-	pc.Content = pvlc
+	return id.videoListContent
+}
 
-	return pc
+func (id *PlaylistInitialData) SetContent(ct []PlaylistVideoListRendererContent) {
+	id.videoListContent = ct
+}
+
+func (id *PlaylistInitialData) PlaylistOwner() string {
+	ownerTextRuns := make([]string, 0, len(id.Header.PlaylistHeaderRenderer.OwnerText.Runs))
+	for _, r := range id.Header.PlaylistHeaderRenderer.OwnerText.Runs {
+		ownerTextRuns = append(ownerTextRuns, r.Text)
+	}
+	return strings.Join(ownerTextRuns, "")
 }
