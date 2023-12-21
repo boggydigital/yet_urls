@@ -30,3 +30,7 @@ var thumbnailQualityFilenames = map[ThumbnailQuality]string{
 	ThumbnailQualityMQ:     "mqdefault",
 	ThumbnailQualitySD:     "sddefault",
 }
+
+func (tq ThumbnailQuality) String() string {
+	return thumbnailQualityFilenames[tq]
+}
