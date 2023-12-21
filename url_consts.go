@@ -24,6 +24,15 @@ const (
 	ThumbnailQualitySD
 )
 
+func AllThumbnailQualities() []ThumbnailQuality {
+	return []ThumbnailQuality{
+		ThumbnailQualityMaxRes,
+		ThumbnailQualityHQ,
+		ThumbnailQualityMQ,
+		ThumbnailQualitySD,
+	}
+}
+
 var thumbnailQualityFilenames = map[ThumbnailQuality]string{
 	ThumbnailQualityMaxRes: "maxresdefault",
 	ThumbnailQualityHQ:     "hqdefault",
