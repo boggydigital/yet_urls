@@ -43,3 +43,12 @@ var thumbnailQualityFilenames = map[ThumbnailQuality]string{
 func (tq ThumbnailQuality) String() string {
 	return thumbnailQualityFilenames[tq]
 }
+
+func ParseThumbnailQuality(tqs string) ThumbnailQuality {
+	for k, v := range thumbnailQualityFilenames {
+		if v == tqs {
+			return k
+		}
+	}
+	return ThumbnailQualityHQ
+}
