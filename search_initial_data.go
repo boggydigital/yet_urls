@@ -25,16 +25,14 @@ type SearchInitialData struct {
 }
 
 type ChannelRenderer struct {
-	ChannelId          string             `json:"channelId"`
-	Title              SimpleText         `json:"title"`
-	NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
-	DescriptionSnippet TextRuns           `json:"descriptionSnippet"`
-	ShortBylineText    TextRuns           `json:"shortBylineText"`
-	VideoCountText     struct {
-		SimpleText string `json:"simpleText"`
-	} `json:"videoCountText"`
-	SubscriberCountText SimpleText `json:"subscriberCountText"`
-	LongBylineText      TextRuns   `json:"longBylineText"`
+	ChannelId           string             `json:"channelId"`
+	Title               SimpleText         `json:"title"`
+	NavigationEndpoint  NavigationEndpoint `json:"navigationEndpoint"`
+	DescriptionSnippet  TextRuns           `json:"descriptionSnippet"`
+	ShortBylineText     TextRuns           `json:"shortBylineText"`
+	VideoCountText      SimpleText         `json:"videoCountText"`
+	SubscriberCountText SimpleText         `json:"subscriberCountText"`
+	LongBylineText      TextRuns           `json:"longBylineText"`
 }
 
 type PlaylistRenderer struct {
