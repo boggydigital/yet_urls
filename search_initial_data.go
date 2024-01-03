@@ -96,7 +96,6 @@ type VideoRenderer struct {
 		} `json:"runs"`
 	} `json:"ownerText"`
 	ShortBylineText    BylineText `json:"shortBylineText"`
-	ShowActionMenu     bool       `json:"showActionMenu"`
 	ShortViewCountText SimpleText `json:"shortViewCountText"`
 	IsWatched          bool       `json:"isWatched,omitempty"`
 }
@@ -126,4 +125,47 @@ type NavigationEndpoint struct {
 		VideoId    string `json:"videoId"`
 		PlaylistId string `json:"playlistId"`
 	}
+}
+
+func (sid *SearchInitialData) ChannelRenderers() []*ChannelRenderer {
+	chrs := make([]*ChannelRenderer, 0)
+
+	for _, content := range sid.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents {
+		for _, isrc := range content.ItemSectionRenderer.Contents {
+			if isrc.ChannelRenderer.ChannelId == "" {
+				continue
+			}
+			chrs = append(chrs, &isrc.ChannelRenderer)
+		}
+	}
+	return chrs
+}
+
+func (sid *SearchInitialData) PlaylistRenderers() []*PlaylistRenderer {
+	plrs := make([]*PlaylistRenderer, 0)
+
+	for _, content := range sid.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents {
+		for _, isrc := range content.ItemSectionRenderer.Contents {
+			if isrc.PlaylistRenderer.PlaylistId == "" {
+				continue
+			}
+			plrs = append(plrs, &isrc.PlaylistRenderer)
+		}
+	}
+	return plrs
+}
+
+func (sid *SearchInitialData) VideoRenderers() []*VideoRenderer {
+	vrs := make([]*VideoRenderer, 0)
+
+	for _, content := range sid.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents {
+		for _, isrc := range content.ItemSectionRenderer.Contents {
+			if isrc.VideoRenderer.VideoId == "" {
+				continue
+			}
+			vrs = append(vrs, &isrc.VideoRenderer)
+		}
+	}
+
+	return vrs
 }
