@@ -28,18 +28,13 @@ type ChannelRenderer struct {
 	ChannelId          string             `json:"channelId"`
 	Title              SimpleText         `json:"title"`
 	NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
-	DescriptionSnippet struct {
-		Runs []struct {
-			Text string `json:"text"`
-			Bold bool   `json:"bold,omitempty"`
-		} `json:"runs"`
-	} `json:"descriptionSnippet"`
-	ShortBylineText BylineText `json:"shortBylineText"`
-	VideoCountText  struct {
+	DescriptionSnippet TextRuns           `json:"descriptionSnippet"`
+	ShortBylineText    TextRuns           `json:"shortBylineText"`
+	VideoCountText     struct {
 		SimpleText string `json:"simpleText"`
 	} `json:"videoCountText"`
 	SubscriberCountText SimpleText `json:"subscriberCountText"`
-	LongBylineText      BylineText `json:"longBylineText"`
+	LongBylineText      TextRuns   `json:"longBylineText"`
 }
 
 type PlaylistRenderer struct {
@@ -47,14 +42,9 @@ type PlaylistRenderer struct {
 	Title              SimpleText         `json:"title"`
 	VideoCount         string             `json:"videoCount"`
 	NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
-	ViewPlaylistText   struct {
-		Runs []struct {
-			Text               string             `json:"text"`
-			NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
-		} `json:"runs"`
-	} `json:"viewPlaylistText"`
-	ShortBylineText BylineText `json:"shortBylineText"`
-	Videos          []struct {
+	ViewPlaylistText   TextRuns           `json:"viewPlaylistText"`
+	ShortBylineText    TextRuns           `json:"shortBylineText"`
+	Videos             []struct {
 		ChildVideoRenderer struct {
 			Title              SimpleText         `json:"title"`
 			NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
@@ -62,49 +52,24 @@ type PlaylistRenderer struct {
 			VideoId            string             `json:"videoId"`
 		} `json:"childVideoRenderer"`
 	} `json:"videos"`
-	VideoCountText struct {
-		Runs []struct {
-			Text string `json:"text"`
-		} `json:"runs"`
-	} `json:"videoCountText"`
-	TrackingParams string `json:"trackingParams"`
-	ThumbnailText  struct {
-		Runs []struct {
-			Text string `json:"text"`
-			Bold bool   `json:"bold,omitempty"`
-		} `json:"runs"`
-	} `json:"thumbnailText"`
-	LongBylineText BylineText `json:"longBylineText"`
+	VideoCountText TextRuns `json:"videoCountText"`
+	TrackingParams string   `json:"trackingParams"`
+	ThumbnailText  TextRuns `json:"thumbnailText"`
+	LongBylineText TextRuns `json:"longBylineText"`
 }
 
 type VideoRenderer struct {
-	VideoId string `json:"videoId"`
-	Title   struct {
-		Runs []struct {
-			Text string `json:"text"`
-		} `json:"runs"`
-	} `json:"title"`
-	LongBylineText     BylineText         `json:"longBylineText"`
+	VideoId            string             `json:"videoId"`
+	Title              TextRuns           `json:"title"`
+	LongBylineText     TextRuns           `json:"longBylineText"`
 	PublishedTimeText  SimpleText         `json:"publishedTimeText"`
 	LengthText         SimpleText         `json:"lengthText"`
 	ViewCountText      SimpleText         `json:"viewCountText"`
 	NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
-	OwnerText          struct {
-		Runs []struct {
-			Text               string             `json:"text"`
-			NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
-		} `json:"runs"`
-	} `json:"ownerText"`
-	ShortBylineText    BylineText `json:"shortBylineText"`
-	ShortViewCountText SimpleText `json:"shortViewCountText"`
-	IsWatched          bool       `json:"isWatched,omitempty"`
-}
-
-type BylineText struct {
-	Runs []struct {
-		Text               string             `json:"text"`
-		NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
-	} `json:"runs"`
+	OwnerText          TextRuns           `json:"ownerText"`
+	ShortBylineText    TextRuns           `json:"shortBylineText"`
+	ShortViewCountText SimpleText         `json:"shortViewCountText"`
+	IsWatched          bool               `json:"isWatched,omitempty"`
 }
 
 type NavigationEndpoint struct {
@@ -127,43 +92,43 @@ type NavigationEndpoint struct {
 	}
 }
 
-func (sid *SearchInitialData) ChannelRenderers() []*ChannelRenderer {
-	chrs := make([]*ChannelRenderer, 0)
+func (sid *SearchInitialData) ChannelRenderers() []ChannelRenderer {
+	chrs := make([]ChannelRenderer, 0)
 
 	for _, content := range sid.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents {
 		for _, isrc := range content.ItemSectionRenderer.Contents {
 			if isrc.ChannelRenderer.ChannelId == "" {
 				continue
 			}
-			chrs = append(chrs, &isrc.ChannelRenderer)
+			chrs = append(chrs, isrc.ChannelRenderer)
 		}
 	}
 	return chrs
 }
 
-func (sid *SearchInitialData) PlaylistRenderers() []*PlaylistRenderer {
-	plrs := make([]*PlaylistRenderer, 0)
+func (sid *SearchInitialData) PlaylistRenderers() []PlaylistRenderer {
+	plrs := make([]PlaylistRenderer, 0)
 
 	for _, content := range sid.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents {
 		for _, isrc := range content.ItemSectionRenderer.Contents {
 			if isrc.PlaylistRenderer.PlaylistId == "" {
 				continue
 			}
-			plrs = append(plrs, &isrc.PlaylistRenderer)
+			plrs = append(plrs, isrc.PlaylistRenderer)
 		}
 	}
 	return plrs
 }
 
-func (sid *SearchInitialData) VideoRenderers() []*VideoRenderer {
-	vrs := make([]*VideoRenderer, 0)
+func (sid *SearchInitialData) VideoRenderers() []VideoRenderer {
+	vrs := make([]VideoRenderer, 0)
 
 	for _, content := range sid.Contents.TwoColumnSearchResultsRenderer.PrimaryContents.SectionListRenderer.Contents {
 		for _, isrc := range content.ItemSectionRenderer.Contents {
 			if isrc.VideoRenderer.VideoId == "" {
 				continue
 			}
-			vrs = append(vrs, &isrc.VideoRenderer)
+			vrs = append(vrs, isrc.VideoRenderer)
 		}
 	}
 

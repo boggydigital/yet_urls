@@ -27,10 +27,8 @@ func (idsm *initialDataScriptMatcher) Match(node *html.Node) bool {
 }
 
 type PlaylistHeaderRenderer struct {
-	PlaylistId string `json:"playlistId"`
-	Title      struct {
-		SimpleText string `json:"simpleText"`
-	} `json:"title"`
+	PlaylistId           string     `json:"playlistId"`
+	Title                SimpleText `json:"title"`
 	PlaylistHeaderBanner struct {
 		HeroPlaylistThumbnailRenderer struct {
 			Thumbnail struct {
@@ -39,11 +37,9 @@ type PlaylistHeaderRenderer struct {
 		} `json:"heroPlaylistThumbnailRenderer"`
 	} `json:"playlistHeaderBanner"`
 	DescriptionText SimpleText `json:"descriptionText"`
-	OwnerText       struct {
-		Runs []OwnerTextRun `json:"runs"`
-	} `json:"ownerText"`
-	ViewCountText SimpleText `json:"viewCountText"`
-	Privacy       string     `json:"privacy"`
+	OwnerText       TextRuns   `json:"ownerText"`
+	ViewCountText   SimpleText `json:"viewCountText"`
+	Privacy         string     `json:"privacy"`
 }
 
 // PlaylistInitialData is a minimal set of data structures required to decode and
@@ -59,8 +55,8 @@ type PlaylistInitialData struct {
 								ItemSectionRenderer struct {
 									Contents []struct {
 										PlaylistVideoListRenderer struct {
-											Contents   []PlaylistVideoListRendererContent `json:"contents"`
 											PlaylistId string                             `json:"playlistId"`
+											Contents   []PlaylistVideoListRendererContent `json:"contents"`
 										} `json:"playlistVideoListRenderer"`
 									} `json:"contents"`
 								} `json:"itemSectionRenderer"`
@@ -79,9 +75,20 @@ type PlaylistInitialData struct {
 	Context          *ytCfgInnerTubeContext
 }
 
-type OwnerTextRun struct {
-	Text               string             `json:"text"`
-	NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
+type Text struct {
+	Text string `json:"text"`
+}
+
+type TextRuns struct {
+	Runs []Text `json:"runs"`
+}
+
+func (tr *TextRuns) String() string {
+	textRuns := make([]string, 0, len(tr.Runs))
+	for _, r := range tr.Runs {
+		textRuns = append(textRuns, r.Text)
+	}
+	return strings.Join(textRuns, "")
 }
 
 type PlaylistVideoListRendererContent struct {
@@ -90,18 +97,10 @@ type PlaylistVideoListRendererContent struct {
 }
 
 type PlaylistVideoRenderer struct {
-	VideoId string `json:"videoId"`
-	Title   struct {
-		Runs []struct {
-			Text string `json:"text"`
-		} `json:"runs"`
-	} `json:"title"`
+	VideoId string   `json:"videoId"`
+	Title   TextRuns `json:"title"`
 	// normally contains video channel title
-	ShortBylineText struct {
-		Runs []struct {
-			Text string `json:"text"`
-		} `json:"runs"`
-	} `json:"shortBylineText"`
+	ShortBylineText TextRuns `json:"shortBylineText"`
 }
 
 type ContinuationEndpoint struct {
@@ -156,11 +155,7 @@ func (id *PlaylistInitialData) SetContent(ct []PlaylistVideoListRendererContent)
 }
 
 func (id *PlaylistInitialData) PlaylistOwner() string {
-	ownerTextRuns := make([]string, 0, len(id.Header.PlaylistHeaderRenderer.OwnerText.Runs))
-	for _, r := range id.Header.PlaylistHeaderRenderer.OwnerText.Runs {
-		ownerTextRuns = append(ownerTextRuns, r.Text)
-	}
-	return strings.Join(ownerTextRuns, "")
+	return id.Header.PlaylistHeaderRenderer.OwnerText.String()
 }
 
 func (pid *PlaylistInitialData) Videos() []VideoIdTitleChannel {
