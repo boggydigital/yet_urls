@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-func GetPlaylistPage(client *http.Client, playlistId string) (*PlaylistInitialData, error) {
-	playlistUrl := PlaylistUrl(playlistId)
+func GetSearchResultsPage(client *http.Client, terms ...string) (*SearchInitialData, error) {
+	searchResultsUrl := SearchResultsUrl(terms...)
 
 	scriptMatches := make(map[string]match_node.Matcher)
 	scriptMatches[ytInitialData] = &initialDataScriptMatcher{}
 	scriptMatches[ytCfg] = &ytCfgScriptMatcher{}
 
-	resp, err := client.Get(playlistUrl.String())
+	resp, err := client.Get(searchResultsUrl.String())
 	if err != nil {
 		return nil, err
 	}
@@ -31,8 +31,8 @@ func GetPlaylistPage(client *http.Client, playlistId string) (*PlaylistInitialDa
 	}
 	idReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialData].Data))
 
-	var pid PlaylistInitialData
-	if err := json.NewDecoder(idReader).Decode(&pid); err != nil {
+	var sid SearchInitialData
+	if err := json.NewDecoder(idReader).Decode(&sid); err != nil {
 		return nil, err
 	}
 
@@ -47,7 +47,7 @@ func GetPlaylistPage(client *http.Client, playlistId string) (*PlaylistInitialDa
 		return nil, err
 	}
 
-	pid.Context = &itc
+	sid.Context = &itc
 
-	return &pid, nil
+	return &sid, nil
 }

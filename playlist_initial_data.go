@@ -1,7 +1,10 @@
 package yt_urls
 
 import (
+	"bytes"
+	"encoding/json"
 	"golang.org/x/net/html"
+	"net/http"
 	"strings"
 )
 
@@ -73,24 +76,12 @@ type PlaylistInitialData struct {
 	} `json:"header"`
 
 	videoListContent []PlaylistVideoListRendererContent
+	Context          *ytCfgInnerTubeContext
 }
 
 type OwnerTextRun struct {
-	Text               string `json:"text"`
-	NavigationEndpoint struct {
-		CommandMetadata struct {
-			WebCommandMetadata struct {
-				Url         string `json:"url"`
-				WebPageType string `json:"webPageType"`
-				RootVe      int    `json:"rootVe"`
-				ApiUrl      string `json:"apiUrl"`
-			} `json:"webCommandMetadata"`
-		} `json:"commandMetadata"`
-		BrowseEndpoint struct {
-			BrowseId         string `json:"browseId"`
-			CanonicalBaseUrl string `json:"canonicalBaseUrl"`
-		} `json:"browseEndpoint"`
-	} `json:"navigationEndpoint"`
+	Text               string             `json:"text"`
+	NavigationEndpoint NavigationEndpoint `json:"navigationEndpoint"`
 }
 
 type PlaylistVideoListRendererContent struct {
@@ -170,4 +161,90 @@ func (id *PlaylistInitialData) PlaylistOwner() string {
 		ownerTextRuns = append(ownerTextRuns, r.Text)
 	}
 	return strings.Join(ownerTextRuns, "")
+}
+
+func (pid *PlaylistInitialData) Videos() []VideoIdTitleChannel {
+	var vits []VideoIdTitleChannel
+	pc := pid.PlaylistContent()
+	vits = make([]VideoIdTitleChannel, 0, len(pc))
+	for _, vlc := range pc {
+		videoId := vlc.PlaylistVideoRenderer.VideoId
+		if videoId == "" {
+			continue
+		}
+		title, titleRuns := "", vlc.PlaylistVideoRenderer.Title.Runs
+		for _, r := range titleRuns {
+			title += r.Text
+		}
+		sbTitle, sbTitleRuns := "", vlc.PlaylistVideoRenderer.ShortBylineText.Runs
+		for _, r := range sbTitleRuns {
+			sbTitle += r.Text
+		}
+		vits = append(vits, VideoIdTitleChannel{
+			VideoId: videoId,
+			Title:   title,
+			Channel: sbTitle,
+		})
+	}
+	return vits
+}
+
+func (pid *PlaylistInitialData) HasContinuation() bool {
+	pc := pid.PlaylistContent()
+	for i := len(pc) - 1; i >= 0; i-- {
+		if pc[i].ContinuationItemRenderer.Trigger != "" {
+			return true
+		}
+	}
+	return false
+}
+
+func (pid *PlaylistInitialData) continuationEndpoint() *ContinuationEndpoint {
+	pc := pid.PlaylistContent()
+	for i := len(pc) - 1; i >= 0; i-- {
+		if pc[i].ContinuationItemRenderer.Trigger != "" {
+			return &pc[i].ContinuationItemRenderer.ContinuationEndpoint
+		}
+	}
+	return nil
+}
+
+func (pid *PlaylistInitialData) Continue(client *http.Client) error {
+
+	if !pid.HasContinuation() {
+		return nil
+	}
+
+	contEndpoint := pid.continuationEndpoint()
+
+	data := browseRequest{
+		Context:      pid.Context.InnerTubeContext,
+		Continuation: contEndpoint.ContinuationCommand.Token,
+	}
+
+	b := new(bytes.Buffer)
+	if err := json.NewEncoder(b).Encode(data); err != nil {
+		return err
+	}
+
+	browseUrl := BrowseUrl(
+		contEndpoint.CommandMetadata.WebCommandMetadata.ApiUrl,
+		pid.Context.APIKey)
+
+	resp, err := client.Post(browseUrl.String(), contentType, b)
+	defer resp.Body.Close()
+
+	if err != nil {
+		return err
+	}
+
+	var br browseResponse
+	if err := json.NewDecoder(resp.Body).Decode(&br); err != nil {
+		return err
+	}
+
+	// update contents internals
+	pid.SetContent(br.OnResponseReceivedActions[0].AppendContinuationItemsAction.ContinuationItems)
+
+	return nil
 }
