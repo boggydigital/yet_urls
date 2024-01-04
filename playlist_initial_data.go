@@ -27,15 +27,8 @@ func (idsm *initialDataScriptMatcher) Match(node *html.Node) bool {
 }
 
 type PlaylistHeaderRenderer struct {
-	PlaylistId           string     `json:"playlistId"`
-	Title                SimpleText `json:"title"`
-	PlaylistHeaderBanner struct {
-		HeroPlaylistThumbnailRenderer struct {
-			Thumbnail struct {
-				Thumbnails []Thumbnail `json:"thumbnails"`
-			} `json:"thumbnail"`
-		} `json:"heroPlaylistThumbnailRenderer"`
-	} `json:"playlistHeaderBanner"`
+	PlaylistId      string     `json:"playlistId"`
+	Title           SimpleText `json:"title"`
 	DescriptionText SimpleText `json:"descriptionText"`
 	OwnerText       TextRuns   `json:"ownerText"`
 	ViewCountText   SimpleText `json:"viewCountText"`
@@ -79,7 +72,14 @@ type Text struct {
 }
 
 type TextRuns struct {
-	Runs []Text `json:"runs"`
+	Runs []struct {
+		Text string `json:"text"`
+	} `json:"runs"`
+	Accessibility struct {
+		AccessibilityData struct {
+			Label string `json:"label"`
+		} `json:"accessibilityData"`
+	} `json:"accessibility"`
 }
 
 func (tr *TextRuns) String() string {
@@ -126,8 +126,8 @@ type VideoIdTitleChannel struct {
 	Channel string
 }
 
-func (id *PlaylistInitialData) PlaylistHeader() PlaylistHeaderRenderer {
-	return id.Header.PlaylistHeaderRenderer
+func (id *PlaylistInitialData) PlaylistHeaderRenderer() *PlaylistHeaderRenderer {
+	return &id.Header.PlaylistHeaderRenderer
 }
 
 func (id *PlaylistInitialData) PlaylistContent() []PlaylistVideoListRendererContent {
