@@ -8,6 +8,7 @@ const (
 	youtubeWwwHost      = "www." + YoutubeHost
 	resultsPath         = "results"
 	watchPath           = "watch"
+	channelPath         = "channel"
 	viPath              = "/vi"
 	mp4Ext              = ".mp4"
 	webmExt             = ".webm"

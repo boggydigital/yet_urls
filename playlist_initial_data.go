@@ -70,7 +70,6 @@ type PlaylistInitialData struct {
 	Header struct {
 		PlaylistHeaderRenderer PlaylistHeaderRenderer `json:"playlistHeaderRenderer"`
 	} `json:"header"`
-
 	videoListContent []PlaylistVideoListRendererContent
 	Context          *ytCfgInnerTubeContext
 }
