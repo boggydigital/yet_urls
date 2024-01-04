@@ -33,7 +33,6 @@ type ChannelInitialData struct {
 			} `json:"avatar"`
 			ChannelUrl            string   `json:"channelUrl"`
 			IsFamilySafe          bool     `json:"isFamilySafe"`
-			FacebookProfileId     string   `json:"facebookProfileId"`
 			AvailableCountryCodes []string `json:"availableCountryCodes"`
 			VanityChannelUrl      string   `json:"vanityChannelUrl"`
 		} `json:"channelMetadataRenderer"`
