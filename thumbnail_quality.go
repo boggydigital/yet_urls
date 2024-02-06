@@ -3,10 +3,11 @@ package yt_urls
 type ThumbnailQuality int
 
 const (
-	ThumbnailQualityMaxRes ThumbnailQuality = iota
-	ThumbnailQualityHQ
-	ThumbnailQualityMQ
+	ThumbnailQualityUnknown ThumbnailQuality = iota
 	ThumbnailQualitySD
+	ThumbnailQualityMQ
+	ThumbnailQualityHQ
+	ThumbnailQualityMaxRes
 )
 
 func AllThumbnailQualities() []ThumbnailQuality {
@@ -19,10 +20,11 @@ func AllThumbnailQualities() []ThumbnailQuality {
 }
 
 var thumbnailQualityFilenames = map[ThumbnailQuality]string{
-	ThumbnailQualityMaxRes: "maxresdefault",
-	ThumbnailQualityHQ:     "hqdefault",
-	ThumbnailQualityMQ:     "mqdefault",
-	ThumbnailQualitySD:     "sddefault",
+	ThumbnailQualityUnknown: "unknown",
+	ThumbnailQualityMaxRes:  "maxresdefault",
+	ThumbnailQualityHQ:      "hqdefault",
+	ThumbnailQualityMQ:      "mqdefault",
+	ThumbnailQualitySD:      "sddefault",
 }
 
 func (tq ThumbnailQuality) String() string {
@@ -35,5 +37,13 @@ func ParseThumbnailQuality(tqs string) ThumbnailQuality {
 			return k
 		}
 	}
-	return ThumbnailQualityHQ
+	return ThumbnailQualityUnknown
+}
+
+func LowerQuality(q ThumbnailQuality) ThumbnailQuality {
+	tqi := int(q)
+	if tqi <= int(ThumbnailQualityMaxRes) && tqi > int(ThumbnailQualitySD) {
+		return ThumbnailQuality(tqi - 1)
+	}
+	return ThumbnailQualityUnknown
 }
