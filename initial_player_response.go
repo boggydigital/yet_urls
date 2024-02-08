@@ -112,24 +112,58 @@ type InitialPlayerResponse struct {
 	} `json:"captions"`
 }
 
-// TODO: Consider deprecating
-func (ipr *InitialPlayerResponse) Formats() Formats {
-	sort.Sort(sort.Reverse(ipr.StreamingData.Formats))
-	return ipr.StreamingData.Formats
+func (ipr *InitialPlayerResponse) BestFormat() *Format {
+
+	formats := ipr.StreamingData.Formats
+
+	if len(formats) == 0 {
+		return nil
+	}
+
+	qualityIndex := make(map[string]int)
+
+	for ii, ff := range formats {
+		qualityIndex[ff.QualityLabel] = ii
+	}
+
+	qualityOrder := []string{"2160p", "1440p", "1080p", "720p"}
+	bestIndex := -1
+	for _, q := range qualityOrder {
+		if ii, ok := qualityIndex[q]; ok {
+			bestIndex = ii
+		}
+	}
+
+	if bestIndex == -1 && len(formats) > 0 {
+		// use the first available if none of the best quality formats are present
+		bestIndex = 0
+	}
+
+	return &formats[bestIndex]
 }
 
-// TODO: Consider deprecating
-func (ipr *InitialPlayerResponse) AdaptiveVideoFormats() Formats {
-	vfs := ipr.StreamingData.AdaptiveFormats.PreferredVideo()
+func (ipr *InitialPlayerResponse) BestAdaptiveVideoFormat() *Format {
+
+	if len(ipr.StreamingData.AdaptiveFormats) == 0 {
+		return nil
+	}
+
+	vfs := ipr.StreamingData.AdaptiveFormats.PreferredVideoFormats()
 	sort.Sort(sort.Reverse(vfs))
-	return vfs
+
+	return &vfs[0]
 }
 
-// TODO: Consider deprecating
-func (ipr *InitialPlayerResponse) AdaptiveAudioFormats() Formats {
-	afs := ipr.StreamingData.AdaptiveFormats.PreferredAudio()
+func (ipr *InitialPlayerResponse) BestAdaptiveAudioFormat() *Format {
+
+	if len(ipr.StreamingData.AdaptiveFormats) == 0 {
+		return nil
+	}
+
+	afs := ipr.StreamingData.AdaptiveFormats.PreferredAudioFormats()
 	sort.Sort(sort.Reverse(afs))
-	return afs
+
+	return &afs[0]
 }
 
 func parseDateOrDefault(date string) time.Time {

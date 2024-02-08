@@ -69,7 +69,7 @@ func (fs Formats) Video() Formats {
 	return fs.filterByMIMETypePrefix(videoMIMETypePrefix)
 }
 
-func (fs Formats) PreferredVideo() Formats {
+func (fs Formats) PreferredVideoFormats() Formats {
 	return fs.filterByMIMETypePrefix(preferredVideoMIMETypePrefix)
 }
 
@@ -77,7 +77,7 @@ func (fs Formats) Audio() Formats {
 	return fs.filterByMIMETypePrefix(audioMIMETypePrefix)
 }
 
-func (fs Formats) PreferredAudio() Formats {
+func (fs Formats) PreferredAudioFormats() Formats {
 	return fs.filterByMIMETypePrefix(preferredAudioMIMETypePrefix)
 }
 
