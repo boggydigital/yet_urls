@@ -68,8 +68,9 @@ type InitialPlayerResponse struct {
 	VideoDetails struct {
 		VideoId          string   `json:"videoId"`
 		Title            string   `json:"title"`
-		ChannelId        string   `json:"channelId"`
+		LengthSeconds    string   `json:"lengthSeconds"`
 		Keywords         []string `json:"keywords"`
+		ChannelId        string   `json:"channelId"`
 		ShortDescription string   `json:"shortDescription"`
 		Thumbnail        struct {
 			Thumbnails []Thumbnail `json:"thumbnails"`
