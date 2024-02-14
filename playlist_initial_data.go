@@ -121,9 +121,10 @@ type ContinuationItemRenderer struct {
 	ContinuationEndpoint ContinuationEndpoint `json:"continuationEndpoint"`
 }
 
-type VideoIdTitleChannel struct {
+type VideoIdTitleLengthChannel struct {
 	VideoId string
 	Title   string
+	Length  string
 	Channel string
 }
 
@@ -158,10 +159,10 @@ func (id *PlaylistInitialData) PlaylistOwner() string {
 	return id.Header.PlaylistHeaderRenderer.OwnerText.String()
 }
 
-func (pid *PlaylistInitialData) Videos() []VideoIdTitleChannel {
-	var vits []VideoIdTitleChannel
+func (pid *PlaylistInitialData) Videos() []VideoIdTitleLengthChannel {
+	var vits []VideoIdTitleLengthChannel
 	pc := pid.PlaylistContent()
-	vits = make([]VideoIdTitleChannel, 0, len(pc))
+	vits = make([]VideoIdTitleLengthChannel, 0, len(pc))
 	for _, vlc := range pc {
 		videoId := vlc.PlaylistVideoRenderer.VideoId
 		if videoId == "" {
@@ -175,9 +176,10 @@ func (pid *PlaylistInitialData) Videos() []VideoIdTitleChannel {
 		for _, r := range sbTitleRuns {
 			sbTitle += r.Text
 		}
-		vits = append(vits, VideoIdTitleChannel{
+		vits = append(vits, VideoIdTitleLengthChannel{
 			VideoId: videoId,
 			Title:   title,
+			Length:  vlc.PlaylistVideoRenderer.LengthSeconds,
 			Channel: sbTitle,
 		})
 	}
