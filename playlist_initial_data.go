@@ -96,8 +96,9 @@ type PlaylistVideoListRendererContent struct {
 }
 
 type PlaylistVideoRenderer struct {
-	VideoId string   `json:"videoId"`
-	Title   TextRuns `json:"title"`
+	VideoId       string   `json:"videoId"`
+	Title         TextRuns `json:"title"`
+	LengthSeconds string   `json:"lengthSeconds"`
 	// normally contains video channel title
 	ShortBylineText TextRuns `json:"shortBylineText"`
 }
