@@ -17,7 +17,6 @@ const (
 )
 
 var (
-	ErrSignatureCipher     = errors.New("signatureCipher")
 	ErrMissingRequiredNode = errors.New("missing required node")
 )
 
@@ -125,20 +124,9 @@ func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, 
 			ipr.PlayabilityStatus.ErrorScreen.PlayerErrorMessageRenderer.SubReason.SimpleText)
 	}
 
-	signatureCipher := false
-
 	formats := make(map[string]int, len(ipr.StreamingData.Formats))
 	for _, f := range ipr.StreamingData.Formats {
-		if f.Url == "" && f.SignatureCipher != "" {
-			signatureCipher = true
-			continue
-		}
 		formats[f.Url] = f.Bitrate
-	}
-
-	if len(formats) == 0 && signatureCipher {
-		//TODO: support signature cipher YouTube URLs
-		return nil, ErrSignatureCipher
 	}
 
 	// set player URL before returning

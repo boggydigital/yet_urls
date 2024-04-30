@@ -182,3 +182,17 @@ func (ipr *InitialPlayerResponse) PublishDate() time.Time {
 func (ipr *InitialPlayerResponse) UploadDate() time.Time {
 	return parseDateOrDefault(ipr.Microformat.PlayerMicroformatRenderer.UploadDate)
 }
+
+func (ipr *InitialPlayerResponse) SignatureCipher() bool {
+	for _, f := range ipr.StreamingData.Formats {
+		if f.SignatureCipher != "" {
+			return true
+		}
+	}
+	for _, f := range ipr.StreamingData.AdaptiveFormats {
+		if f.SignatureCipher != "" {
+			return true
+		}
+	}
+	return false
+}
