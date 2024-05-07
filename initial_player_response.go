@@ -140,7 +140,7 @@ func (ipr *InitialPlayerResponse) BestFormat() *Format {
 		bestIndex = 0
 	}
 
-	return &formats[bestIndex]
+	return formats[bestIndex]
 }
 
 func (ipr *InitialPlayerResponse) BestAdaptiveVideoFormat() *Format {
@@ -152,7 +152,7 @@ func (ipr *InitialPlayerResponse) BestAdaptiveVideoFormat() *Format {
 	vfs := ipr.StreamingData.AdaptiveFormats.PreferredVideoFormats()
 	sort.Sort(sort.Reverse(vfs))
 
-	return &vfs[0]
+	return vfs[0]
 }
 
 func (ipr *InitialPlayerResponse) BestAdaptiveAudioFormat() *Format {
@@ -164,7 +164,7 @@ func (ipr *InitialPlayerResponse) BestAdaptiveAudioFormat() *Format {
 	afs := ipr.StreamingData.AdaptiveFormats.PreferredAudioFormats()
 	sort.Sort(sort.Reverse(afs))
 
-	return &afs[0]
+	return afs[0]
 }
 
 func parseDateOrDefault(date string) time.Time {

@@ -40,7 +40,7 @@ type Format struct {
 	SignatureCipher  string  `json:"signatureCipher"`
 }
 
-type Formats []Format
+type Formats []*Format
 
 func (fs Formats) Len() int {
 	return len(fs)
