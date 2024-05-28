@@ -1,4 +1,4 @@
-package yet_urls
+package youtube_urls
 
 type SearchInitialData struct {
 	EstimatedResults string `json:"estimatedResults"`

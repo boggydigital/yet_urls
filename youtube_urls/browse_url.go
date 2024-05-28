@@ -1,6 +1,8 @@
-package yet_urls
+package youtube_urls
 
-import "net/url"
+import (
+	"net/url"
+)
 
 const (
 	keyParam    = "key"

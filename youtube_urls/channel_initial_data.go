@@ -1,4 +1,4 @@
-package yet_urls
+package youtube_urls
 
 type ChannelInitialData struct {
 	Contents struct {
