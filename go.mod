@@ -1,4 +1,4 @@
-module github.com/boggydigital/yt_urls
+module github.com/boggydigital/yet_urls
 
 go 1.22.3
 

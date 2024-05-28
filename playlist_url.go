@@ -1,4 +1,4 @@
-package yt_urls
+package yet_urls
 
 import "net/url"
 
@@ -7,8 +7,8 @@ const (
 	listParam    = "list"
 )
 
-//PlaylistUrl provides a URL for a playlist-id,
-//e.g. http://www.youtube.com/playlist?list=playlist-id1 for "playlist-id1"
+// PlaylistUrl provides a URL for a playlist-id,
+// e.g. http://www.youtube.com/playlist?list=playlist-id1 for "playlist-id1"
 func PlaylistUrl(playlistId string) *url.URL {
 	playlistUrl := &url.URL{
 		Scheme: httpsScheme,
@@ -23,7 +23,7 @@ func PlaylistUrl(playlistId string) *url.URL {
 	return playlistUrl
 }
 
-//PlaylistId extracts playlist-id from a PlaylistUrl conforming URL
+// PlaylistId extracts playlist-id from a PlaylistUrl conforming URL
 func PlaylistId(ytUrlStr string) (string, error) {
 	ytUrl, err := url.Parse(ytUrlStr)
 	if err != nil {

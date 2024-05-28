@@ -1,11 +1,11 @@
-package yt_urls
+package yet_urls
 
 import (
 	"net/url"
 )
 
-//VideoUrl provides a URL for a video-id,
-//e.g. http://www.youtube.com/watch?v=video-id1 for "video-id1"
+// VideoUrl provides a URL for a video-id,
+// e.g. http://www.youtube.com/watch?v=video-id1 for "video-id1"
 func VideoUrl(videoId string) *url.URL {
 	watchUrl := &url.URL{
 		Scheme: httpsScheme,
@@ -20,7 +20,7 @@ func VideoUrl(videoId string) *url.URL {
 	return watchUrl
 }
 
-//VideoId extracts video-id from a VideoUrl conforming URL
+// VideoId extracts video-id from a VideoUrl conforming URL
 func VideoId(ytUrlStr string) (string, error) {
 	ytUrl, err := url.Parse(ytUrlStr)
 	if err != nil {

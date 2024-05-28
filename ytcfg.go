@@ -1,4 +1,4 @@
-package yt_urls
+package yet_urls
 
 import (
 	"golang.org/x/net/html"
@@ -18,8 +18,8 @@ func extractYtCfgJsonObject(data string) string {
 
 type ytCfgScriptMatcher struct{}
 
-//ytCfgScript is an HTML node filter for YouTube <script> text content
-//that contains ytcfg initialization data
+// ytCfgScript is an HTML node filter for YouTube <script> text content
+// that contains ytcfg initialization data
 func (ytcsm *ytCfgScriptMatcher) Match(node *html.Node) bool {
 	if node.Type != html.TextNode ||
 		node.Parent == nil ||

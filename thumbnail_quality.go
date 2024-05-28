@@ -1,4 +1,4 @@
-package yt_urls
+package yet_urls
 
 type ThumbnailQuality int
 

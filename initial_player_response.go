@@ -1,4 +1,4 @@
-package yt_urls
+package yet_urls
 
 import (
 	"golang.org/x/net/html"

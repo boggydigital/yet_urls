@@ -1,6 +1,6 @@
-# yt_urls
+# yet_urls
 
-yt_urls extracts a single video stream URL ("the best" quality one) from a YouTube video page. This module has the following exported methods:
+yet_urls extracts a single video stream URL ("the best" quality one) from a YouTube video page. This module has the following exported methods:
 
 ## WatchUrl
 
