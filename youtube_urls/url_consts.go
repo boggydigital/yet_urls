@@ -9,6 +9,7 @@ const (
 	resultsPath         = "results"
 	watchPath           = "watch"
 	channelPath         = "channel"
+	channelVideosPath   = "videos"
 	viPath              = "/vi"
 	mp4Ext              = ".mp4"
 	webmExt             = ".webm"
