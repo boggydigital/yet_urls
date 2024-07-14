@@ -1,5 +1,13 @@
 package youtube_urls
 
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+	"strconv"
+	"strings"
+)
+
 type ChannelVideosInitialData struct {
 	ResponseContext struct {
 		ServiceTrackingParams []struct {
@@ -133,4 +141,135 @@ type channelVideosBrowseResponse struct {
 			TargetId          string                     `json:"targetId"`
 		} `json:"appendContinuationItemsAction"`
 	} `json:"onResponseReceivedActions"`
+}
+
+func (cvid *ChannelVideosInitialData) VideosContent() []RichGridRendererContents {
+	if cvid.videosContent == nil {
+		vc := make([]RichGridRendererContents, 0)
+
+		for _, tab := range cvid.Contents.TwoColumnBrowseResultsRenderer.Tabs {
+			for _, sectionList := range tab.TabRenderer.Content.RichGridRenderer.Contents {
+				vc = append(vc, sectionList)
+			}
+		}
+
+		cvid.videosContent = vc
+	}
+
+	return cvid.videosContent
+}
+
+func (cvid *ChannelVideosInitialData) SetContent(ct []RichGridRendererContents) {
+	cvid.videosContent = ct
+}
+
+func (cvid *ChannelVideosInitialData) HasContinuation() bool {
+	vc := cvid.VideosContent()
+	for i := len(vc) - 1; i >= 0; i-- {
+		if vc[i].ContinuationItemRenderer.Trigger != "" {
+			return true
+		}
+	}
+	return false
+}
+
+func (cvid *ChannelVideosInitialData) continuationEndpoint() *ContinuationEndpoint {
+	pc := cvid.VideosContent()
+	for i := len(pc) - 1; i >= 0; i-- {
+		if pc[i].ContinuationItemRenderer.Trigger != "" {
+			return &pc[i].ContinuationItemRenderer.ContinuationEndpoint
+		}
+	}
+	return nil
+}
+
+func (cvid *ChannelVideosInitialData) Continue(client *http.Client) error {
+
+	if !cvid.HasContinuation() {
+		return nil
+	}
+
+	contEndpoint := cvid.continuationEndpoint()
+
+	data := browseRequest{
+		Context:      cvid.Context.InnerTubeContext,
+		Continuation: contEndpoint.ContinuationCommand.Token,
+	}
+
+	b := new(bytes.Buffer)
+	if err := json.NewEncoder(b).Encode(data); err != nil {
+		return err
+	}
+
+	browseUrl := BrowseUrl(
+		contEndpoint.CommandMetadata.WebCommandMetadata.ApiUrl,
+		cvid.Context.APIKey)
+
+	resp, err := client.Post(browseUrl.String(), contentType, b)
+	defer resp.Body.Close()
+
+	if err != nil {
+		return err
+	}
+
+	var br channelVideosBrowseResponse
+	if err := json.NewDecoder(resp.Body).Decode(&br); err != nil {
+		return err
+	}
+
+	// update contents internals
+	cvid.SetContent(br.OnResponseReceivedActions[0].AppendContinuationItemsAction.ContinuationItems)
+
+	return nil
+}
+
+func (cvid *ChannelVideosInitialData) Videos() []VideoIdTitleLengthChannel {
+	var vits []VideoIdTitleLengthChannel
+	pc := cvid.VideosContent()
+	vits = make([]VideoIdTitleLengthChannel, 0, len(pc))
+	for _, vlc := range pc {
+		videoId := vlc.RichItemRenderer.Content.VideoRenderer.VideoId
+		if videoId == "" {
+			continue
+		}
+		title, titleRuns := "", vlc.RichItemRenderer.Content.VideoRenderer.Title.Runs
+		for _, r := range titleRuns {
+			title += r.Text
+		}
+
+		lengthSeconds := lengthTextToSeconds(vlc.RichItemRenderer.Content.VideoRenderer.LengthText.SimpleText)
+
+		vits = append(vits, VideoIdTitleLengthChannel{
+			VideoId:       videoId,
+			Title:         title,
+			LengthSeconds: lengthSeconds,
+		})
+	}
+	return vits
+}
+
+func lengthTextToSeconds(lt string) string {
+	seconds := int64(0)
+	parts := strings.Split(lt, ":")
+	if len(parts) > 0 {
+		if si, err := strconv.ParseInt(parts[len(parts)-1], 10, 64); err == nil {
+			seconds += si
+		}
+		if len(parts) > 1 {
+			if mi, err := strconv.ParseInt(parts[len(parts)-2], 10, 64); err == nil {
+				seconds += mi * 60
+			}
+			if len(parts) > 2 {
+				if hi, err := strconv.ParseInt(parts[len(parts)-3], 10, 64); err == nil {
+					seconds += hi * 60 * 60
+				}
+				if len(parts) > 3 {
+					if di, err := strconv.ParseInt(parts[len(parts)-4], 10, 64); err == nil {
+						seconds += di * 60 * 60 * 24
+					}
+				}
+			}
+		}
+	}
+	return strconv.FormatInt(seconds, 10)
 }

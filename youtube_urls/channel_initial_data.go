@@ -135,25 +135,3 @@ func (sr *ShelfRenderer) GridVideoRenderers() []GridVideoRenderer {
 	}
 	return gvrs
 }
-
-func (cvid *ChannelVideosInitialData) Videos() []VideoIdTitleLengthChannel {
-	var vits []VideoIdTitleLengthChannel
-	pc := cvid.VideosContent()
-	vits = make([]VideoIdTitleLengthChannel, 0, len(pc))
-	for _, vlc := range pc {
-		videoId := vlc.RichItemRenderer.Content.VideoRenderer.VideoId
-		if videoId == "" {
-			continue
-		}
-		title, titleRuns := "", vlc.RichItemRenderer.Content.VideoRenderer.Title.Runs
-		for _, r := range titleRuns {
-			title += r.Text
-		}
-		vits = append(vits, VideoIdTitleLengthChannel{
-			VideoId: videoId,
-			Title:   title,
-			Length:  vlc.RichItemRenderer.Content.VideoRenderer.LengthText.SimpleText,
-		})
-	}
-	return vits
-}

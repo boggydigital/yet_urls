@@ -122,10 +122,10 @@ type ContinuationItemRenderer struct {
 }
 
 type VideoIdTitleLengthChannel struct {
-	VideoId string
-	Title   string
-	Length  string
-	Channel string
+	VideoId       string
+	Title         string
+	LengthSeconds string
+	Channel       string
 }
 
 func (id *PlaylistInitialData) PlaylistHeaderRenderer() *PlaylistHeaderRenderer {
@@ -177,10 +177,10 @@ func (pid *PlaylistInitialData) Videos() []VideoIdTitleLengthChannel {
 			sbTitle += r.Text
 		}
 		vits = append(vits, VideoIdTitleLengthChannel{
-			VideoId: videoId,
-			Title:   title,
-			Length:  vlc.PlaylistVideoRenderer.LengthSeconds,
-			Channel: sbTitle,
+			VideoId:       videoId,
+			Title:         title,
+			LengthSeconds: vlc.PlaylistVideoRenderer.LengthSeconds,
+			Channel:       sbTitle,
 		})
 	}
 	return vits
