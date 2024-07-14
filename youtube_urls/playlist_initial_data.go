@@ -235,7 +235,7 @@ func (pid *PlaylistInitialData) Continue(client *http.Client) error {
 		return err
 	}
 
-	var br browseResponse
+	var br playlistBrowseResponse
 	if err := json.NewDecoder(resp.Body).Decode(&br); err != nil {
 		return err
 	}

@@ -28,7 +28,7 @@ type browseRequest struct {
 	Continuation string       `json:"continuation"`
 }
 
-type browseResponse struct {
+type playlistBrowseResponse struct {
 	OnResponseReceivedActions []struct {
 		AppendContinuationItemsAction struct {
 			ContinuationItems []PlaylistVideoListRendererContent `json:"continuationItems"`
