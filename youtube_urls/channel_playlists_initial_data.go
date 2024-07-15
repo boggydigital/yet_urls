@@ -47,7 +47,7 @@ type ChannelPlaylistsInitialData struct {
 
 type GridPlaylistRenderer struct {
 	PlaylistId          string             `json:"playlistId"`
-	Title               SimpleText         `json:"title"`
+	Title               TextRuns           `json:"title"`
 	VideoCountText      TextRuns           `json:"videoCountText"`
 	NavigationEndpoint  NavigationEndpoint `json:"navigationEndpoint"`
 	VideoCountShortText SimpleText         `json:"videoCountShortText"`
