@@ -26,13 +26,180 @@ func (idsm *initialDataScriptMatcher) Match(node *html.Node) bool {
 	return strings.HasPrefix(node.Data, ytInitialData)
 }
 
-type PlaylistHeaderRenderer struct {
-	PlaylistId      string     `json:"playlistId"`
-	Title           SimpleText `json:"title"`
-	DescriptionText SimpleText `json:"descriptionText"`
-	OwnerText       TextRuns   `json:"ownerText"`
-	ViewCountText   SimpleText `json:"viewCountText"`
-	Privacy         string     `json:"privacy"`
+//type PlaylistHeaderRenderer struct {
+//	PlaylistId      string     `json:"playlistId"`
+//	Title           SimpleText `json:"title"`
+//	DescriptionText SimpleText `json:"descriptionText"`
+//	OwnerText       TextRuns   `json:"ownerText"`
+//	ViewCountText   SimpleText `json:"viewCountText"`
+//	Privacy         string     `json:"privacy"`
+//}
+
+type PageHeaderRenderer struct {
+	PageTitle string `json:"pageTitle"`
+	Content   struct {
+		PageHeaderViewModel struct {
+			Title struct {
+				DynamicTextViewModel struct {
+					Text struct {
+						Content string `json:"content"`
+					} `json:"text"`
+				} `json:"dynamicTextViewModel"`
+			} `json:"title"`
+			Metadata struct {
+				ContentMetadataViewModel struct {
+					MetadataRows []struct {
+						MetadataParts []struct {
+							Text struct {
+								Content string `json:"content"`
+							} `json:"text,omitempty"`
+						} `json:"metadataParts"`
+					} `json:"metadataRows"`
+					Delimiter string `json:"delimiter"`
+				} `json:"contentMetadataViewModel"`
+			} `json:"metadata"`
+			Description struct {
+				DescriptionPreviewViewModel struct {
+					Description struct {
+						Content string `json:"content"`
+					} `json:"description"`
+					TruncationText struct {
+						Content   string `json:"content"`
+						StyleRuns []struct {
+							StartIndex int `json:"startIndex"`
+							Length     int `json:"length"`
+							Weight     int `json:"weight"`
+						} `json:"styleRuns"`
+					} `json:"truncationText"`
+				} `json:"descriptionPreviewViewModel"`
+			} `json:"description"`
+			HeroImage struct {
+				ContentPreviewImageViewModel struct {
+					Image struct {
+						Sources []struct {
+							Url    string `json:"url"`
+							Width  int    `json:"width"`
+							Height int    `json:"height"`
+						} `json:"sources"`
+					} `json:"image"`
+					Style      string `json:"style"`
+					LayoutMode string `json:"layoutMode"`
+					Overlays   []struct {
+						ThumbnailHoverOverlayViewModel struct {
+							Icon struct {
+								Sources []struct {
+									ClientResource struct {
+										ImageName string `json:"imageName"`
+									} `json:"clientResource"`
+								} `json:"sources"`
+							} `json:"icon"`
+							Text struct {
+								Content   string `json:"content"`
+								StyleRuns []struct {
+									StartIndex int `json:"startIndex"`
+									Length     int `json:"length"`
+								} `json:"styleRuns"`
+							} `json:"text"`
+							Style string `json:"style"`
+						} `json:"thumbnailHoverOverlayViewModel"`
+					} `json:"overlays"`
+				} `json:"contentPreviewImageViewModel"`
+			} `json:"heroImage"`
+			Background struct {
+				CinematicContainerViewModel struct {
+					BackgroundImageConfig struct {
+						Image struct {
+							Sources []struct {
+								Url    string `json:"url"`
+								Width  int    `json:"width"`
+								Height int    `json:"height"`
+							} `json:"sources"`
+						} `json:"image"`
+					} `json:"backgroundImageConfig"`
+					GradientColorConfig []struct {
+						LightThemeColor int64   `json:"lightThemeColor"`
+						DarkThemeColor  int64   `json:"darkThemeColor"`
+						StartLocation   float64 `json:"startLocation"`
+					} `json:"gradientColorConfig"`
+					Config struct {
+						LightThemeBackgroundColor int64 `json:"lightThemeBackgroundColor"`
+						DarkThemeBackgroundColor  int64 `json:"darkThemeBackgroundColor"`
+						ColorSourceSizeMultiplier int   `json:"colorSourceSizeMultiplier"`
+						ApplyClientImageBlur      bool  `json:"applyClientImageBlur"`
+					} `json:"config"`
+				} `json:"cinematicContainerViewModel"`
+			} `json:"background"`
+		} `json:"pageHeaderViewModel"`
+	} `json:"content"`
+}
+
+type PlaylistMetadataRenderer struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+}
+
+type PlaylistSidebarRenderer struct {
+	Items []struct {
+		PlaylistSidebarPrimaryInfoRenderer struct {
+			ThumbnailRenderer struct {
+				PlaylistVideoThumbnailRenderer struct {
+					Thumbnail struct {
+						Thumbnails []struct {
+							Url    string `json:"url"`
+							Width  int    `json:"width"`
+							Height int    `json:"height"`
+						} `json:"thumbnails"`
+					} `json:"thumbnail"`
+					TrackingParams string `json:"trackingParams"`
+				} `json:"playlistVideoThumbnailRenderer"`
+			} `json:"thumbnailRenderer"`
+			Title TextRuns   `json:"title"`
+			Stats []TextRuns `json:"stats"`
+			Menu  struct {
+				MenuRenderer struct {
+					Items []struct {
+						MenuNavigationItemRenderer struct {
+							Text struct {
+								SimpleText string `json:"simpleText"`
+							} `json:"text"`
+							Icon struct {
+								IconType string `json:"iconType"`
+							} `json:"icon"`
+						} `json:"menuNavigationItemRenderer"`
+					} `json:"items"`
+					TargetId string `json:"targetId"`
+				} `json:"menuRenderer"`
+			} `json:"menu"`
+			ThumbnailOverlays []struct {
+				ThumbnailOverlaySidePanelRenderer struct {
+					Text struct {
+						SimpleText string `json:"simpleText"`
+					} `json:"text"`
+					Icon struct {
+						IconType string `json:"iconType"`
+					} `json:"icon"`
+				} `json:"thumbnailOverlaySidePanelRenderer"`
+			} `json:"thumbnailOverlays"`
+			Description struct {
+				SimpleText string `json:"simpleText"`
+			} `json:"description"`
+			ShowMoreText TextRuns `json:"showMoreText"`
+		} `json:"playlistSidebarPrimaryInfoRenderer,omitempty"`
+		PlaylistSidebarSecondaryInfoRenderer struct {
+			VideoOwner struct {
+				VideoOwnerRenderer struct {
+					Thumbnail struct {
+						Thumbnails []struct {
+							Url    string `json:"url"`
+							Width  int    `json:"width"`
+							Height int    `json:"height"`
+						} `json:"thumbnails"`
+					} `json:"thumbnail"`
+					Title TextRuns `json:"title"`
+				} `json:"videoOwnerRenderer"`
+			} `json:"videoOwner"`
+		} `json:"playlistSidebarSecondaryInfoRenderer,omitempty"`
+	} `json:"items"`
 }
 
 // PlaylistInitialData is a minimal set of data structures required to decode and
@@ -61,8 +228,14 @@ type PlaylistInitialData struct {
 		} `json:"twoColumnBrowseResultsRenderer"`
 	} `json:"contents"`
 	Header struct {
-		PlaylistHeaderRenderer PlaylistHeaderRenderer `json:"playlistHeaderRenderer"`
+		PageHeaderRenderer PageHeaderRenderer `json:"pageHeaderRenderer"`
 	} `json:"header"`
+	Metadata struct {
+		PlaylistMetadataRenderer PlaylistMetadataRenderer `json:"playlistMetadataRenderer"`
+	} `json:"metadata"`
+	Sidebar struct {
+		PlaylistSidebarRenderer PlaylistSidebarRenderer `json:"playlistSidebarRenderer"`
+	} `json:"sidebar"`
 	videoListContent []PlaylistVideoListRendererContent
 	Context          *ytCfgInnerTubeContext
 }
@@ -128,8 +301,12 @@ type VideoIdTitleLengthChannel struct {
 	Channel       string
 }
 
-func (id *PlaylistInitialData) PlaylistHeaderRenderer() *PlaylistHeaderRenderer {
-	return &id.Header.PlaylistHeaderRenderer
+func (id *PlaylistInitialData) PageHeaderRenderer() *PageHeaderRenderer {
+	return &id.Header.PageHeaderRenderer
+}
+
+func (id *PlaylistInitialData) PlaylistTitle() string {
+	return id.Metadata.PlaylistMetadataRenderer.Title
 }
 
 func (id *PlaylistInitialData) PlaylistContent() []PlaylistVideoListRendererContent {
@@ -156,7 +333,12 @@ func (id *PlaylistInitialData) SetContent(ct []PlaylistVideoListRendererContent)
 }
 
 func (id *PlaylistInitialData) PlaylistOwner() string {
-	return id.Header.PlaylistHeaderRenderer.OwnerText.String()
+	for _, item := range id.Sidebar.PlaylistSidebarRenderer.Items {
+		if videoOwnerTitle := item.PlaylistSidebarSecondaryInfoRenderer.VideoOwner.VideoOwnerRenderer.Title.String(); videoOwnerTitle != "" {
+			return videoOwnerTitle
+		}
+	}
+	return ""
 }
 
 func (pid *PlaylistInitialData) Videos() []VideoIdTitleLengthChannel {
