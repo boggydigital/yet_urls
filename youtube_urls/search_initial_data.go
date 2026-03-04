@@ -9,12 +9,12 @@ type SearchInitialData struct {
 					Contents []struct {
 						ItemSectionRenderer struct {
 							Contents []struct {
-								ChannelRenderer  ChannelRenderer  `json:"channelRenderer,omitempty"`
-								PlaylistRenderer PlaylistRenderer `json:"playlistRenderer,omitempty"`
-								VideoRenderer    VideoRenderer    `json:"videoRenderer,omitempty"`
+								ChannelRenderer  ChannelRenderer  `json:"channelRenderer"`
+								PlaylistRenderer PlaylistRenderer `json:"playlistRenderer"`
+								VideoRenderer    VideoRenderer    `json:"videoRenderer"`
 							} `json:"contents"`
-						} `json:"itemSectionRenderer,omitempty"`
-						ContinuationItemRenderer ContinuationItemRenderer `json:"continuationItemRenderer,omitempty"`
+						} `json:"itemSectionRenderer"`
+						ContinuationItemRenderer ContinuationItemRenderer `json:"continuationItemRenderer"`
 					} `json:"contents"`
 				} `json:"sectionListRenderer"`
 			} `json:"primaryContents"`

@@ -42,8 +42,8 @@ type ChannelVideosInitialData struct {
 						RichGridRenderer struct {
 							Contents []RichGridRendererContents `json:"contents"`
 						} `json:"richGridRenderer"`
-					} `json:"content,omitempty"`
-				} `json:"tabRenderer,omitempty"`
+					} `json:"content"`
+				} `json:"tabRenderer"`
 			} `json:"tabs"`
 		} `json:"twoColumnBrowseResultsRenderer"`
 	} `json:"contents"`
@@ -130,8 +130,8 @@ type RichGridRendererContents struct {
 				IsWatched bool `json:"isWatched,omitempty"`
 			} `json:"videoRenderer"`
 		} `json:"content"`
-	} `json:"richItemRenderer,omitempty"`
-	ContinuationItemRenderer ContinuationItemRenderer `json:"continuationItemRenderer,omitempty"`
+	} `json:"richItemRenderer"`
+	ContinuationItemRenderer ContinuationItemRenderer `json:"continuationItemRenderer"`
 }
 
 type channelVideosBrowseResponse struct {

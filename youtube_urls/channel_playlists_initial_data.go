@@ -22,8 +22,8 @@ type ChannelPlaylistsInitialData struct {
 								} `json:"itemSectionRenderer"`
 							} `json:"contents"`
 						} `json:"sectionListRenderer"`
-					} `json:"content,omitempty"`
-				} `json:"tabRenderer,omitempty"`
+					} `json:"content"`
+				} `json:"tabRenderer"`
 			} `json:"tabs"`
 		} `json:"twoColumnBrowseResultsRenderer"`
 	} `json:"contents"`
@@ -52,7 +52,7 @@ type GridPlaylistRenderer struct {
 	NavigationEndpoint  NavigationEndpoint `json:"navigationEndpoint"`
 	VideoCountShortText SimpleText         `json:"videoCountShortText"`
 	ViewPlaylistText    TextRuns           `json:"viewPlaylistText"`
-	PublishedTimeText   SimpleText         `json:"publishedTimeText,omitempty"`
+	PublishedTimeText   SimpleText         `json:"publishedTimeText"`
 }
 
 func (cpid *ChannelPlaylistsInitialData) Playlists() []*GridPlaylistRenderer {

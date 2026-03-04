@@ -52,7 +52,7 @@ type PageHeaderRenderer struct {
 						MetadataParts []struct {
 							Text struct {
 								Content string `json:"content"`
-							} `json:"text,omitempty"`
+							} `json:"text"`
 						} `json:"metadataParts"`
 					} `json:"metadataRows"`
 					Delimiter string `json:"delimiter"`
@@ -184,7 +184,7 @@ type PlaylistSidebarRenderer struct {
 				SimpleText string `json:"simpleText"`
 			} `json:"description"`
 			ShowMoreText TextRuns `json:"showMoreText"`
-		} `json:"playlistSidebarPrimaryInfoRenderer,omitempty"`
+		} `json:"playlistSidebarPrimaryInfoRenderer"`
 		PlaylistSidebarSecondaryInfoRenderer struct {
 			VideoOwner struct {
 				VideoOwnerRenderer struct {
@@ -198,7 +198,7 @@ type PlaylistSidebarRenderer struct {
 					Title TextRuns `json:"title"`
 				} `json:"videoOwnerRenderer"`
 			} `json:"videoOwner"`
-		} `json:"playlistSidebarSecondaryInfoRenderer,omitempty"`
+		} `json:"playlistSidebarSecondaryInfoRenderer"`
 	} `json:"items"`
 }
 
