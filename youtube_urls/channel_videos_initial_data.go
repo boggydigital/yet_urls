@@ -644,6 +644,15 @@ func (cvid *ChannelVideosInitialData) Videos() []VideoIdTitleLengthChannel {
 
 		lvm := vlc.RichItemRenderer.Content.LockupViewModel
 
+		var seconds int64
+		for _, overlay := range lvm.ContentImage.ThumbnailViewModel.Overlays {
+			for _, badge := range overlay.ThumbnailBottomOverlayViewModel.Badges {
+				if seconds = lengthTextToSeconds(badge.ThumbnailBadgeViewModel.Text); seconds > 0 {
+					break
+				}
+			}
+		}
+
 		videoId := lvm.ContentId
 		if videoId == "" {
 			continue
@@ -651,16 +660,22 @@ func (cvid *ChannelVideosInitialData) Videos() []VideoIdTitleLengthChannel {
 
 		title := lvm.Metadata.LockupMetadataViewModel.Title.Content
 
-		vits = append(vits, VideoIdTitleLengthChannel{
+		vit := VideoIdTitleLengthChannel{
 			VideoId: videoId,
 			Title:   title,
-		})
+		}
+
+		if seconds > 0 {
+			vit.LengthSeconds = strconv.FormatInt(seconds, 10)
+		}
+
+		vits = append(vits, vit)
 	}
 	return vits
 }
 
-func lengthTextToSeconds(lt string) string {
-	seconds := int64(0)
+func lengthTextToSeconds(lt string) int64 {
+	var seconds int64
 	parts := strings.Split(lt, ":")
 	if len(parts) > 0 {
 		if si, err := strconv.ParseInt(parts[len(parts)-1], 10, 64); err == nil {
@@ -682,5 +697,5 @@ func lengthTextToSeconds(lt string) string {
 			}
 		}
 	}
-	return strconv.FormatInt(seconds, 10)
+	return seconds
 }
