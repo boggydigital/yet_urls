@@ -32,7 +32,7 @@ func GetPlaylistPage(client *http.Client, playlistId string) (*PlaylistInitialDa
 	idReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialData].Data))
 
 	var pid PlaylistInitialData
-	if err := json.NewDecoder(idReader).Decode(&pid); err != nil {
+	if err = json.NewDecoder(idReader).Decode(&pid); err != nil {
 		return nil, err
 	}
 

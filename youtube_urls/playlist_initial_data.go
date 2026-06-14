@@ -213,12 +213,7 @@ type PlaylistInitialData struct {
 						SectionListRenderer struct {
 							Contents []struct {
 								ItemSectionRenderer struct {
-									Contents []struct {
-										PlaylistVideoListRenderer struct {
-											PlaylistId string                             `json:"playlistId"`
-											Contents   []PlaylistVideoListRendererContent `json:"contents"`
-										} `json:"playlistVideoListRenderer"`
-									} `json:"contents"`
+									Contents []LockupViewModelContent `json:"contents"`
 								} `json:"itemSectionRenderer"`
 							} `json:"contents"`
 						} `json:"sectionListRenderer"`
@@ -238,6 +233,479 @@ type PlaylistInitialData struct {
 	} `json:"sidebar"`
 	videoListContent []PlaylistVideoListRendererContent
 	Context          *ytCfgInnerTubeContext
+}
+
+type LockupViewModelContent struct {
+	LockupViewModel struct {
+		ContentImage struct {
+			ThumbnailViewModel struct {
+				Image struct {
+					Sources []struct {
+						Url    string `json:"url"`
+						Width  int    `json:"width"`
+						Height int    `json:"height"`
+					} `json:"sources"`
+				} `json:"image"`
+				Overlays []struct {
+					ThumbnailBottomOverlayViewModel struct {
+						Badges []struct {
+							ThumbnailBadgeViewModel struct {
+								Text                         string `json:"text"`
+								BadgeStyle                   string `json:"badgeStyle"`
+								AnimationActivationTargetId  string `json:"animationActivationTargetId"`
+								AnimationActivationEntityKey string `json:"animationActivationEntityKey"`
+								LottieData                   struct {
+									Url      string `json:"url"`
+									Settings struct {
+										Loop     bool `json:"loop"`
+										Autoplay bool `json:"autoplay"`
+									} `json:"settings"`
+								} `json:"lottieData"`
+								AnimatedText                          string `json:"animatedText"`
+								AnimationActivationEntitySelectorType string `json:"animationActivationEntitySelectorType"`
+								RendererContext                       struct {
+									AccessibilityContext struct {
+										Label string `json:"label"`
+									} `json:"accessibilityContext"`
+								} `json:"rendererContext"`
+							} `json:"thumbnailBadgeViewModel"`
+						} `json:"badges"`
+					} `json:"thumbnailBottomOverlayViewModel,omitempty"`
+					ThumbnailHoverOverlayToggleActionsViewModel struct {
+						Buttons []struct {
+							ToggleButtonViewModel struct {
+								DefaultButtonViewModel struct {
+									ButtonViewModel struct {
+										IconName string `json:"iconName"`
+										OnTap    struct {
+											InnertubeCommand struct {
+												ClickTrackingParams string `json:"clickTrackingParams"`
+												CommandMetadata     struct {
+													WebCommandMetadata struct {
+														SendPost bool   `json:"sendPost"`
+														ApiUrl   string `json:"apiUrl,omitempty"`
+													} `json:"webCommandMetadata"`
+												} `json:"commandMetadata"`
+												PlaylistEditEndpoint struct {
+													PlaylistId string `json:"playlistId"`
+													Actions    []struct {
+														AddedVideoId string `json:"addedVideoId"`
+														Action       string `json:"action"`
+													} `json:"actions"`
+												} `json:"playlistEditEndpoint,omitempty"`
+												SignalServiceEndpoint struct {
+													Signal  string `json:"signal"`
+													Actions []struct {
+														ClickTrackingParams  string `json:"clickTrackingParams"`
+														AddToPlaylistCommand struct {
+															OpenMiniplayer      bool   `json:"openMiniplayer"`
+															VideoId             string `json:"videoId"`
+															ListType            string `json:"listType"`
+															OnCreateListCommand struct {
+																ClickTrackingParams string `json:"clickTrackingParams"`
+																CommandMetadata     struct {
+																	WebCommandMetadata struct {
+																		SendPost bool   `json:"sendPost"`
+																		ApiUrl   string `json:"apiUrl"`
+																	} `json:"webCommandMetadata"`
+																} `json:"commandMetadata"`
+																CreatePlaylistServiceEndpoint struct {
+																	VideoIds []string `json:"videoIds"`
+																	Params   string   `json:"params"`
+																} `json:"createPlaylistServiceEndpoint"`
+															} `json:"onCreateListCommand"`
+															VideoIds     []string `json:"videoIds"`
+															VideoCommand struct {
+																ClickTrackingParams string `json:"clickTrackingParams"`
+																CommandMetadata     struct {
+																	WebCommandMetadata struct {
+																		Url         string `json:"url"`
+																		WebPageType string `json:"webPageType"`
+																		RootVe      int    `json:"rootVe"`
+																	} `json:"webCommandMetadata"`
+																} `json:"commandMetadata"`
+																WatchEndpoint struct {
+																	VideoId                            string `json:"videoId"`
+																	WatchEndpointSupportedOnesieConfig struct {
+																		Html5PlaybackOnesieConfig struct {
+																			CommonConfig struct {
+																				Url string `json:"url"`
+																			} `json:"commonConfig"`
+																		} `json:"html5PlaybackOnesieConfig"`
+																	} `json:"watchEndpointSupportedOnesieConfig"`
+																} `json:"watchEndpoint"`
+															} `json:"videoCommand"`
+														} `json:"addToPlaylistCommand"`
+													} `json:"actions"`
+												} `json:"signalServiceEndpoint,omitempty"`
+											} `json:"innertubeCommand"`
+										} `json:"onTap"`
+										AccessibilityText string `json:"accessibilityText"`
+										Style             string `json:"style"`
+										TrackingParams    string `json:"trackingParams"`
+										Type              string `json:"type"`
+										ButtonSize        string `json:"buttonSize"`
+										State             string `json:"state"`
+									} `json:"buttonViewModel"`
+								} `json:"defaultButtonViewModel"`
+								ToggledButtonViewModel struct {
+									ButtonViewModel struct {
+										IconName string `json:"iconName"`
+										OnTap    struct {
+											InnertubeCommand struct {
+												ClickTrackingParams string `json:"clickTrackingParams"`
+												CommandMetadata     struct {
+													WebCommandMetadata struct {
+														SendPost bool   `json:"sendPost"`
+														ApiUrl   string `json:"apiUrl"`
+													} `json:"webCommandMetadata"`
+												} `json:"commandMetadata"`
+												PlaylistEditEndpoint struct {
+													PlaylistId string `json:"playlistId"`
+													Actions    []struct {
+														Action         string `json:"action"`
+														RemovedVideoId string `json:"removedVideoId"`
+													} `json:"actions"`
+												} `json:"playlistEditEndpoint"`
+											} `json:"innertubeCommand"`
+										} `json:"onTap,omitempty"`
+										AccessibilityText string `json:"accessibilityText"`
+										Style             string `json:"style"`
+										TrackingParams    string `json:"trackingParams"`
+										Type              string `json:"type"`
+										ButtonSize        string `json:"buttonSize"`
+										State             string `json:"state"`
+									} `json:"buttonViewModel"`
+								} `json:"toggledButtonViewModel"`
+								IsToggled      bool   `json:"isToggled"`
+								TrackingParams string `json:"trackingParams"`
+							} `json:"toggleButtonViewModel"`
+						} `json:"buttons"`
+					} `json:"thumbnailHoverOverlayToggleActionsViewModel,omitempty"`
+				} `json:"overlays"`
+			} `json:"thumbnailViewModel"`
+		} `json:"contentImage"`
+		Metadata struct {
+			LockupMetadataViewModel struct {
+				Title struct {
+					Content string `json:"content"`
+				} `json:"title"`
+				Image struct {
+					DecoratedAvatarViewModel struct {
+						Avatar struct {
+							AvatarViewModel struct {
+								Image struct {
+									Sources []struct {
+										Url    string `json:"url"`
+										Width  int    `json:"width"`
+										Height int    `json:"height"`
+									} `json:"sources"`
+								} `json:"image"`
+								AvatarImageSize string `json:"avatarImageSize"`
+							} `json:"avatarViewModel"`
+						} `json:"avatar"`
+						A11YLabel       string `json:"a11yLabel"`
+						RendererContext struct {
+							CommandContext struct {
+								OnTap struct {
+									InnertubeCommand struct {
+										ClickTrackingParams string `json:"clickTrackingParams"`
+										CommandMetadata     struct {
+											WebCommandMetadata struct {
+												Url         string `json:"url"`
+												WebPageType string `json:"webPageType"`
+												RootVe      int    `json:"rootVe"`
+												ApiUrl      string `json:"apiUrl"`
+											} `json:"webCommandMetadata"`
+										} `json:"commandMetadata"`
+										BrowseEndpoint struct {
+											BrowseId         string `json:"browseId"`
+											CanonicalBaseUrl string `json:"canonicalBaseUrl"`
+										} `json:"browseEndpoint"`
+									} `json:"innertubeCommand"`
+								} `json:"onTap"`
+							} `json:"commandContext"`
+						} `json:"rendererContext"`
+					} `json:"decoratedAvatarViewModel"`
+				} `json:"image"`
+				Metadata struct {
+					ContentMetadataViewModel struct {
+						MetadataRows []struct {
+							MetadataParts []struct {
+								Text struct {
+									Content     string `json:"content"`
+									CommandRuns []struct {
+										StartIndex int `json:"startIndex"`
+										Length     int `json:"length"`
+										OnTap      struct {
+											InnertubeCommand struct {
+												ClickTrackingParams string `json:"clickTrackingParams"`
+												CommandMetadata     struct {
+													WebCommandMetadata struct {
+														Url         string `json:"url"`
+														WebPageType string `json:"webPageType"`
+														RootVe      int    `json:"rootVe"`
+														ApiUrl      string `json:"apiUrl"`
+													} `json:"webCommandMetadata"`
+												} `json:"commandMetadata"`
+												BrowseEndpoint struct {
+													BrowseId         string `json:"browseId"`
+													CanonicalBaseUrl string `json:"canonicalBaseUrl"`
+												} `json:"browseEndpoint"`
+											} `json:"innertubeCommand"`
+										} `json:"onTap"`
+									} `json:"commandRuns,omitempty"`
+									StyleRuns []struct {
+										StartIndex         int    `json:"startIndex"`
+										Length             int    `json:"length,omitempty"`
+										WeightLabel        string `json:"weightLabel,omitempty"`
+										StyleRunExtensions struct {
+											StyleRunColorMapExtension struct {
+												ColorMap []struct {
+													Key   string `json:"key"`
+													Value int64  `json:"value"`
+												} `json:"colorMap"`
+											} `json:"styleRunColorMapExtension"`
+										} `json:"styleRunExtensions,omitempty"`
+									} `json:"styleRuns,omitempty"`
+									AttachmentRuns []struct {
+										StartIndex int `json:"startIndex"`
+										Length     int `json:"length"`
+										Element    struct {
+											Type struct {
+												ImageType struct {
+													Image struct {
+														Sources []struct {
+															ClientResource struct {
+																ImageName string `json:"imageName"`
+															} `json:"clientResource"`
+															Width  int `json:"width"`
+															Height int `json:"height"`
+														} `json:"sources"`
+													} `json:"image"`
+												} `json:"imageType"`
+											} `json:"type"`
+											Properties struct {
+												LayoutProperties struct {
+													Height struct {
+														Value int    `json:"value"`
+														Unit  string `json:"unit"`
+													} `json:"height"`
+													Width struct {
+														Value int    `json:"value"`
+														Unit  string `json:"unit"`
+													} `json:"width"`
+													Margin struct {
+														Left struct {
+															Value int    `json:"value"`
+															Unit  string `json:"unit"`
+														} `json:"left"`
+													} `json:"margin"`
+												} `json:"layoutProperties"`
+											} `json:"properties"`
+										} `json:"element"`
+										Alignment string `json:"alignment"`
+									} `json:"attachmentRuns,omitempty"`
+								} `json:"text"`
+								AccessibilityLabel string `json:"accessibilityLabel,omitempty"`
+							} `json:"metadataParts"`
+						} `json:"metadataRows"`
+						Delimiter string `json:"delimiter"`
+					} `json:"contentMetadataViewModel"`
+				} `json:"metadata"`
+				MenuButton struct {
+					ButtonViewModel struct {
+						IconName string `json:"iconName"`
+						OnTap    struct {
+							InnertubeCommand struct {
+								ClickTrackingParams string `json:"clickTrackingParams"`
+								ShowSheetCommand    struct {
+									PanelLoadingStrategy struct {
+										InlineContent struct {
+											SheetViewModel struct {
+												Content struct {
+													ListViewModel struct {
+														ListItems []struct {
+															ListItemViewModel struct {
+																Title struct {
+																	Content string `json:"content"`
+																} `json:"title"`
+																LeadingImage struct {
+																	Sources []struct {
+																		ClientResource struct {
+																			ImageName string `json:"imageName"`
+																		} `json:"clientResource"`
+																	} `json:"sources"`
+																} `json:"leadingImage"`
+																RendererContext struct {
+																	LoggingContext struct {
+																		LoggingDirectives struct {
+																			TrackingParams string `json:"trackingParams"`
+																			Visibility     struct {
+																				Types string `json:"types"`
+																			} `json:"visibility"`
+																		} `json:"loggingDirectives"`
+																	} `json:"loggingContext,omitempty"`
+																	CommandContext struct {
+																		OnTap struct {
+																			InnertubeCommand struct {
+																				ClickTrackingParams string `json:"clickTrackingParams"`
+																				CommandMetadata     struct {
+																					WebCommandMetadata struct {
+																						SendPost    bool   `json:"sendPost,omitempty"`
+																						Url         string `json:"url,omitempty"`
+																						WebPageType string `json:"webPageType,omitempty"`
+																						RootVe      int    `json:"rootVe,omitempty"`
+																						ApiUrl      string `json:"apiUrl,omitempty"`
+																					} `json:"webCommandMetadata"`
+																				} `json:"commandMetadata"`
+																				SignalServiceEndpoint struct {
+																					Signal  string `json:"signal"`
+																					Actions []struct {
+																						ClickTrackingParams  string `json:"clickTrackingParams"`
+																						AddToPlaylistCommand struct {
+																							OpenMiniplayer      bool   `json:"openMiniplayer"`
+																							VideoId             string `json:"videoId"`
+																							ListType            string `json:"listType"`
+																							OnCreateListCommand struct {
+																								ClickTrackingParams string `json:"clickTrackingParams"`
+																								CommandMetadata     struct {
+																									WebCommandMetadata struct {
+																										SendPost bool   `json:"sendPost"`
+																										ApiUrl   string `json:"apiUrl"`
+																									} `json:"webCommandMetadata"`
+																								} `json:"commandMetadata"`
+																								CreatePlaylistServiceEndpoint struct {
+																									VideoIds []string `json:"videoIds"`
+																									Params   string   `json:"params"`
+																								} `json:"createPlaylistServiceEndpoint"`
+																							} `json:"onCreateListCommand"`
+																							VideoIds     []string `json:"videoIds"`
+																							VideoCommand struct {
+																								ClickTrackingParams string `json:"clickTrackingParams"`
+																								CommandMetadata     struct {
+																									WebCommandMetadata struct {
+																										Url         string `json:"url"`
+																										WebPageType string `json:"webPageType"`
+																										RootVe      int    `json:"rootVe"`
+																									} `json:"webCommandMetadata"`
+																								} `json:"commandMetadata"`
+																								WatchEndpoint struct {
+																									VideoId                            string `json:"videoId"`
+																									WatchEndpointSupportedOnesieConfig struct {
+																										Html5PlaybackOnesieConfig struct {
+																											CommonConfig struct {
+																												Url string `json:"url"`
+																											} `json:"commonConfig"`
+																										} `json:"html5PlaybackOnesieConfig"`
+																									} `json:"watchEndpointSupportedOnesieConfig"`
+																								} `json:"watchEndpoint"`
+																							} `json:"videoCommand"`
+																						} `json:"addToPlaylistCommand"`
+																					} `json:"actions"`
+																				} `json:"signalServiceEndpoint,omitempty"`
+																				SignInEndpoint struct {
+																					NextEndpoint struct {
+																						ClickTrackingParams string `json:"clickTrackingParams"`
+																						ShowSheetCommand    struct {
+																							PanelLoadingStrategy struct {
+																								RequestTemplate struct {
+																									PanelId string `json:"panelId"`
+																									Params  string `json:"params"`
+																								} `json:"requestTemplate"`
+																							} `json:"panelLoadingStrategy"`
+																						} `json:"showSheetCommand"`
+																					} `json:"nextEndpoint"`
+																				} `json:"signInEndpoint,omitempty"`
+																				ShareEntityServiceEndpoint struct {
+																					SerializedShareEntity string `json:"serializedShareEntity"`
+																					Commands              []struct {
+																						ClickTrackingParams string `json:"clickTrackingParams"`
+																						OpenPopupAction     struct {
+																							Popup struct {
+																								UnifiedSharePanelRenderer struct {
+																									TrackingParams     string `json:"trackingParams"`
+																									ShowLoadingSpinner bool   `json:"showLoadingSpinner"`
+																								} `json:"unifiedSharePanelRenderer"`
+																							} `json:"popup"`
+																							PopupType string `json:"popupType"`
+																							BeReused  bool   `json:"beReused"`
+																						} `json:"openPopupAction"`
+																					} `json:"commands"`
+																				} `json:"shareEntityServiceEndpoint,omitempty"`
+																			} `json:"innertubeCommand"`
+																		} `json:"onTap"`
+																	} `json:"commandContext"`
+																} `json:"rendererContext"`
+															} `json:"listItemViewModel"`
+														} `json:"listItems"`
+													} `json:"listViewModel"`
+												} `json:"content"`
+											} `json:"sheetViewModel"`
+										} `json:"inlineContent"`
+									} `json:"panelLoadingStrategy"`
+								} `json:"showSheetCommand"`
+							} `json:"innertubeCommand"`
+						} `json:"onTap"`
+						AccessibilityText string `json:"accessibilityText"`
+						Style             string `json:"style"`
+						TrackingParams    string `json:"trackingParams"`
+						Type              string `json:"type"`
+						ButtonSize        string `json:"buttonSize"`
+						State             string `json:"state"`
+					} `json:"buttonViewModel"`
+				} `json:"menuButton"`
+			} `json:"lockupMetadataViewModel"`
+		} `json:"metadata"`
+		ContentId       string `json:"contentId"`
+		ContentType     string `json:"contentType"`
+		RendererContext struct {
+			LoggingContext struct {
+				LoggingDirectives struct {
+					TrackingParams string `json:"trackingParams"`
+					Visibility     struct {
+						Types string `json:"types"`
+					} `json:"visibility"`
+				} `json:"loggingDirectives"`
+			} `json:"loggingContext"`
+			AccessibilityContext struct {
+				Label string `json:"label"`
+			} `json:"accessibilityContext"`
+			CommandContext struct {
+				OnTap struct {
+					InnertubeCommand struct {
+						ClickTrackingParams string `json:"clickTrackingParams"`
+						CommandMetadata     struct {
+							WebCommandMetadata struct {
+								Url         string `json:"url"`
+								WebPageType string `json:"webPageType"`
+								RootVe      int    `json:"rootVe"`
+							} `json:"webCommandMetadata"`
+						} `json:"commandMetadata"`
+						WatchEndpoint struct {
+							VideoId        string `json:"videoId"`
+							PlaylistId     string `json:"playlistId"`
+							Index          int    `json:"index"`
+							Params         string `json:"params"`
+							PlayerParams   string `json:"playerParams"`
+							LoggingContext struct {
+								VssLoggingContext struct {
+									SerializedContextData string `json:"serializedContextData"`
+								} `json:"vssLoggingContext"`
+							} `json:"loggingContext"`
+							WatchEndpointSupportedOnesieConfig struct {
+								Html5PlaybackOnesieConfig struct {
+									CommonConfig struct {
+										Url string `json:"url"`
+									} `json:"commonConfig"`
+								} `json:"html5PlaybackOnesieConfig"`
+							} `json:"watchEndpointSupportedOnesieConfig"`
+						} `json:"watchEndpoint"`
+					} `json:"innertubeCommand"`
+				} `json:"onTap"`
+			} `json:"commandContext"`
+		} `json:"rendererContext"`
+	} `json:"lockupViewModel"`
 }
 
 type Text struct {
@@ -269,11 +737,11 @@ type PlaylistVideoListRendererContent struct {
 }
 
 type PlaylistVideoRenderer struct {
-	VideoId       string   `json:"videoId"`
-	Title         TextRuns `json:"title"`
-	LengthSeconds string   `json:"lengthSeconds"`
+	VideoId       string `json:"videoId"`
+	Title         string `json:"title"`
+	LengthSeconds string `json:"lengthSeconds"`
 	// normally contains video channel title
-	ShortBylineText TextRuns `json:"shortBylineText"`
+	ShortBylineText string `json:"shortBylineText"`
 }
 
 type ContinuationEndpoint struct {
@@ -317,7 +785,18 @@ func (id *PlaylistInitialData) PlaylistContent() []PlaylistVideoListRendererCont
 		for _, tab := range id.Contents.TwoColumnBrowseResultsRenderer.Tabs {
 			for _, sectionList := range tab.TabRenderer.Content.SectionListRenderer.Contents {
 				for _, itemSection := range sectionList.ItemSectionRenderer.Contents {
-					pvlc = append(pvlc, itemSection.PlaylistVideoListRenderer.Contents...)
+
+					pvlrc := PlaylistVideoListRendererContent{
+						PlaylistVideoRenderer: PlaylistVideoRenderer{
+							VideoId: itemSection.LockupViewModel.ContentId,
+							Title:   itemSection.LockupViewModel.Metadata.LockupMetadataViewModel.Title.Content,
+							//LengthSeconds:   "",
+							//ShortBylineText: TextRuns{},
+						},
+					}
+
+					//itemSection.LockupViewModel.Metadata.LockupMetadataViewModel.
+					pvlc = append(pvlc, pvlrc)
 				}
 			}
 		}
@@ -350,19 +829,14 @@ func (pid *PlaylistInitialData) Videos() []VideoIdTitleLengthChannel {
 		if videoId == "" {
 			continue
 		}
-		title, titleRuns := "", vlc.PlaylistVideoRenderer.Title.Runs
-		for _, r := range titleRuns {
-			title += r.Text
-		}
-		sbTitle, sbTitleRuns := "", vlc.PlaylistVideoRenderer.ShortBylineText.Runs
-		for _, r := range sbTitleRuns {
-			sbTitle += r.Text
-		}
+
+		title := vlc.PlaylistVideoRenderer.Title
+
 		vits = append(vits, VideoIdTitleLengthChannel{
 			VideoId:       videoId,
 			Title:         title,
 			LengthSeconds: vlc.PlaylistVideoRenderer.LengthSeconds,
-			Channel:       sbTitle,
+			Channel:       vlc.PlaylistVideoRenderer.ShortBylineText,
 		})
 	}
 	return vits
