@@ -3,7 +3,7 @@ package youtube_urls
 //func GetChannelPage(client *http.Client, channelId string) (*ChannelInitialData, error) {
 //	channelUrl := ChannelUrl(channelId)
 //
-//	scriptMatches := make(map[string]match_node.Matcher)
+//	scriptMatches := make(map[string]camino.Matcher)
 //	scriptMatches[ytInitialData] = &initialDataScriptMatcher{}
 //	scriptMatches[ytCfg] = &ytCfgScriptMatcher{}
 //

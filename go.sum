@@ -1,4 +1,6 @@
-github.com/boggydigital/match_node v0.1.19 h1:n62RM9BOUwRJFNtagE4siMu34zgwz+BRCbdO/0j7aJM=
-github.com/boggydigital/match_node v0.1.19/go.mod h1:F8Eqagj2uDDRK6ElfuTIOWROjASUC72uUo9s7FWbthQ=
-golang.org/x/net v0.51.0 h1:94R/GTO7mt3/4wIKpcR5gkGmRLOuE/2hNGeWq/GBIFo=
-golang.org/x/net v0.51.0/go.mod h1:aamm+2QF5ogm02fjy5Bb7CQ0WMt1/WVM7FtyaTLlA9Y=
+github.com/boggydigital/camino v0.2.13 h1:fR1Ir+wLSY4FhaqT09t9iCgokNbTrnQmmKVEsVNSBXY=
+github.com/boggydigital/camino v0.2.13/go.mod h1:UuW3eJP/wrm1VkNPvvNETKisvQymCD1d2a8KIe6J6cI=
+github.com/boggydigital/testo v0.1.8 h1:NKuKLpWKn8gG3dYq8xNrFYHimxoCTdzLOs242q6jeQo=
+github.com/boggydigital/testo v0.1.8/go.mod h1:8JTO6UKeQPsHS82vbCH/3NLDfewmr/84vVQ6rNLdCas=
+golang.org/x/net v0.56.0 h1:Rw8j/hFzGvJUZwNBXnAtf5sVDVt+65SK2C7IxCxZt5o=
+golang.org/x/net v0.56.0/go.mod h1:D3Ku6r+V6JROoZK144D2XfMHFcMq/0zSfLelVTCFKec=

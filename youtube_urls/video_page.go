@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/boggydigital/match_node"
-	"golang.org/x/net/html"
-	"golang.org/x/net/html/atom"
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/boggydigital/camino"
+	"golang.org/x/net/html"
+	"golang.org/x/net/html/atom"
 )
 
 const (
@@ -22,7 +23,7 @@ var (
 
 func getMatchingNodes(
 	body io.Reader,
-	matches map[string]match_node.Matcher) (map[string]*html.Node, error) {
+	matches map[string]camino.Matcher) (map[string]*html.Node, error) {
 
 	doc, err := html.Parse(body)
 	if err != nil {
@@ -32,7 +33,7 @@ func getMatchingNodes(
 	nodes := make(map[string]*html.Node)
 
 	for title, match := range matches {
-		if node := match_node.Match(doc, match); node != nil {
+		if node := camino.Match(doc, match); node != nil {
 			nodes[title] = node
 		}
 	}
@@ -72,9 +73,9 @@ func getPlayerUrl(body io.Reader) (string, error) {
 		return "", err
 	}
 
-	node := match_node.Match(doc, &playerScriptMatcher{})
+	node := camino.Match(doc, &playerScriptMatcher{})
 
-	src := match_node.AttrVal(node, "src")
+	src := camino.GetAttribute(node, "src")
 
 	return src, nil
 }
@@ -83,7 +84,7 @@ func GetVideoPage(client *http.Client, videoId string) (*InitialPlayerResponse, 
 
 	videoUrl := VideoUrl(videoId)
 
-	scriptMatch := map[string]match_node.Matcher{
+	scriptMatch := map[string]camino.Matcher{
 		ytInitialPlayerResponse: &initialPlayerResponseMatcher{},
 	}
 

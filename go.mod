@@ -1,8 +1,8 @@
 module github.com/boggydigital/yet_urls
 
-go 1.26.0
+go 1.26.3
 
 require (
-	github.com/boggydigital/match_node v0.1.19
-	golang.org/x/net v0.51.0
+	github.com/boggydigital/camino v0.2.13
+	golang.org/x/net v0.56.0
 )

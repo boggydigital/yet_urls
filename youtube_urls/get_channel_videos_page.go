@@ -2,15 +2,16 @@ package youtube_urls
 
 import (
 	"encoding/json"
-	"github.com/boggydigital/match_node"
 	"net/http"
 	"strings"
+
+	"github.com/boggydigital/camino"
 )
 
 func GetChannelVideosPage(client *http.Client, channelId string) (*ChannelVideosInitialData, error) {
 	channelUrl := ChannelVideosUrl(channelId)
 
-	scriptMatches := make(map[string]match_node.Matcher)
+	scriptMatches := make(map[string]camino.Matcher)
 	scriptMatches[ytInitialData] = &initialDataScriptMatcher{}
 	scriptMatches[ytCfg] = &ytCfgScriptMatcher{}
 
