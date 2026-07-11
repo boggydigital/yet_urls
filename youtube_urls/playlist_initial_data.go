@@ -739,9 +739,8 @@ type PlaylistVideoListRendererContent struct {
 type PlaylistVideoRenderer struct {
 	VideoId       string `json:"videoId"`
 	Title         string `json:"title"`
-	LengthSeconds string `json:"lengthSeconds"`
-	// normally contains video channel title
-	ShortBylineText string `json:"shortBylineText"`
+	LengthSeconds int64  `json:"lengthSeconds"`
+	Channel       string `json:"channel"`
 }
 
 type ContinuationEndpoint struct {
@@ -765,7 +764,7 @@ type ContinuationItemRenderer struct {
 type VideoIdTitleLengthChannel struct {
 	VideoId       string
 	Title         string
-	LengthSeconds string
+	LengthSeconds int64
 	Channel       string
 }
 
@@ -790,9 +789,31 @@ func (id *PlaylistInitialData) PlaylistContent() []PlaylistVideoListRendererCont
 						PlaylistVideoRenderer: PlaylistVideoRenderer{
 							VideoId: itemSection.LockupViewModel.ContentId,
 							Title:   itemSection.LockupViewModel.Metadata.LockupMetadataViewModel.Title.Content,
-							//LengthSeconds:   "",
-							//ShortBylineText: TextRuns{},
 						},
+					}
+
+					lengthSet := false
+					for _, overlay := range itemSection.LockupViewModel.ContentImage.ThumbnailViewModel.Overlays {
+						if lengthSet {
+							break
+						}
+						for _, badge := range overlay.ThumbnailBottomOverlayViewModel.Badges {
+							pvlrc.PlaylistVideoRenderer.LengthSeconds = lengthTextToSeconds(badge.ThumbnailBadgeViewModel.Text)
+							lengthSet = true
+							break
+						}
+					}
+
+					channelSet := false
+					for _, row := range itemSection.LockupViewModel.Metadata.LockupMetadataViewModel.Metadata.ContentMetadataViewModel.MetadataRows {
+						if channelSet {
+							break
+						}
+						for _, part := range row.MetadataParts {
+							pvlrc.PlaylistVideoRenderer.Channel = part.Text.Content
+							channelSet = true
+							break
+						}
 					}
 
 					//itemSection.LockupViewModel.Metadata.LockupMetadataViewModel.
@@ -836,7 +857,7 @@ func (pid *PlaylistInitialData) Videos() []VideoIdTitleLengthChannel {
 			VideoId:       videoId,
 			Title:         title,
 			LengthSeconds: vlc.PlaylistVideoRenderer.LengthSeconds,
-			Channel:       vlc.PlaylistVideoRenderer.ShortBylineText,
+			Channel:       vlc.PlaylistVideoRenderer.Channel,
 		})
 	}
 	return vits

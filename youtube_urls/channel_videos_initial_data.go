@@ -666,7 +666,7 @@ func (cvid *ChannelVideosInitialData) Videos() []VideoIdTitleLengthChannel {
 		}
 
 		if seconds > 0 {
-			vit.LengthSeconds = strconv.FormatInt(seconds, 10)
+			vit.LengthSeconds = seconds
 		}
 
 		vits = append(vits, vit)
