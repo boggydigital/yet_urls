@@ -1,14 +1,15 @@
 package youtube_urls
 
 import (
-	"golang.org/x/net/html"
 	"strings"
+
+	"golang.org/x/net/html"
 )
 
 const (
 	opYtCfgMarker = "ytcfg.set({"
 	clYtCfgMarker = "});"
-	ytCfg         = "(function() {window.ytplayer={};\n" + opYtCfgMarker
+	ytCfg         = "(function ytBootstrapConfig() {window.ytplayer={};\n" + opYtCfgMarker
 )
 
 func extractYtCfgJsonObject(data string) string {

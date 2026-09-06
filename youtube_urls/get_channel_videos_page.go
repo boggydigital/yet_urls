@@ -33,7 +33,7 @@ func GetChannelVideosPage(client *http.Client, channelId string) (*ChannelVideos
 	idReader := strings.NewReader(extractJsonObject(scriptNodes[ytInitialData].Data))
 
 	var cvid ChannelVideosInitialData
-	if err := json.NewDecoder(idReader).Decode(&cvid); err != nil {
+	if err = json.NewDecoder(idReader).Decode(&cvid); err != nil {
 		return nil, err
 	}
 
@@ -44,7 +44,7 @@ func GetChannelVideosPage(client *http.Client, channelId string) (*ChannelVideos
 
 	var itc ytCfgInnerTubeContext
 
-	if err := json.NewDecoder(itcReader).Decode(&itc); err != nil {
+	if err = json.NewDecoder(itcReader).Decode(&itc); err != nil {
 		return nil, err
 	}
 
